@@ -1,4 +1,13 @@
 from dataclasses import dataclass
+from enum import StrEnum
+
+
+class Priority(StrEnum):
+    """Urgency level of an order."""
+
+    LOW = "low"
+    NORMAL = "normal"
+    HIGH = "high"
 
 
 @dataclass
@@ -10,3 +19,4 @@ class Order:
     item: str
     quantity: int
     status: str = "created"
+    priority: Priority = Priority.NORMAL

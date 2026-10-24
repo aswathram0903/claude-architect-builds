@@ -1,6 +1,7 @@
 import pytest
 
 from orders import api
+from orders.models import Priority
 from orders.service import OrderService
 
 
@@ -22,3 +23,7 @@ def test_cancel_order_marks_order_cancelled():
 def test_list_orders_reflects_created_orders():
     api.create_order("ann", "pen", 1)
     assert len(api.list_orders()) == 1
+
+
+def test_create_order_passes_priority_through():
+    assert api.create_order("ann", "pen", 1, Priority.HIGH).priority == Priority.HIGH

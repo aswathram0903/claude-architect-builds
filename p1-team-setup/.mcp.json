@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "team-docs": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${DOCS_DIR:-./docs}"]
+    }
+  }
+}
