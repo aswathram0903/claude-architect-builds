@@ -1,0 +1,25 @@
+{
+  "vendor": "Harbourline IT",
+  "invoice_number": null,
+  "invoice_date": "2026-10-02",
+  "due_date": "2026-10-30",
+  "currency": "USD",
+  "currency_detail": null,
+  "category": "services",
+  "category_detail": null,
+  "line_items": [
+    {
+      "description": "Laptop setup for new starters",
+      "quantity": 3,
+      "amount": 3450
+    },
+    {
+      "description": "Network move engineer time",
+      "quantity": 6,
+      "amount": 720
+    }
+  ],
+  "stated_total": 4170,
+  "calculated_total": 4170,
+  "conflict_detected": false
+}

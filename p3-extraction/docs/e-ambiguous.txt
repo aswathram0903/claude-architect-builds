@@ -1,0 +1,6 @@
+Invoice 2026/88 from Meridian Consulting
+Date: 2026-09-30, payable within 14 days. Currency: EUR.
+
+1. Configuration of the new accounting software, 12 hours ........ 1,440.00
+2. Training session for finance staff on the software ............... 600.00
+Total .......................................................... 2,040.00

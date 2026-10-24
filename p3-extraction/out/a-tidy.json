@@ -1,0 +1,25 @@
+{
+  "vendor": "NORDLICHT SOFTWARE GMBH",
+  "invoice_number": "NS-2026-0412",
+  "invoice_date": "2026-09-14",
+  "due_date": "2026-10-14",
+  "currency": "EUR",
+  "currency_detail": null,
+  "category": "software",
+  "category_detail": null,
+  "line_items": [
+    {
+      "description": "Team licence, annual",
+      "quantity": 10,
+      "amount": 4800.0
+    },
+    {
+      "description": "Onboarding workshop",
+      "quantity": 1,
+      "amount": 900.0
+    }
+  ],
+  "stated_total": 5700.0,
+  "calculated_total": 5700.0,
+  "conflict_detected": false
+}

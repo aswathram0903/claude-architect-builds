@@ -1,0 +1,9 @@
+From: billing@harbourline-it.example
+Subject: Your September charges
+
+Hi,
+as agreed, here is what we charged for September. We set up 3 laptops for your new starters
+at 1,150 dollars each, and our engineer spent 6 hours on the network move, billed at 120 dollars an hour.
+Please pay the 4,170 USD by the 30th of October 2026. This note was sent on 2 October 2026.
+
+Thanks, Harbourline IT

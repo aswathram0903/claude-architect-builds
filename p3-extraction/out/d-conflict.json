@@ -1,0 +1,30 @@
+{
+  "vendor": "CLOUDNEST LTD",
+  "invoice_number": "CN-5520",
+  "invoice_date": "2026-10-01",
+  "due_date": "2026-10-31",
+  "currency": "GBP",
+  "currency_detail": null,
+  "category": "services",
+  "category_detail": null,
+  "line_items": [
+    {
+      "description": "Cloud hosting, September",
+      "quantity": 1,
+      "amount": 1200.0
+    },
+    {
+      "description": "Backup storage, 2 TB",
+      "quantity": 1,
+      "amount": 180.0
+    },
+    {
+      "description": "Support plan",
+      "quantity": 1,
+      "amount": 250.0
+    }
+  ],
+  "stated_total": 1730.0,
+  "calculated_total": 1630.0,
+  "conflict_detected": true
+}

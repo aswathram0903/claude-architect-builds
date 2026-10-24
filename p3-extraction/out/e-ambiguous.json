@@ -1,0 +1,25 @@
+{
+  "vendor": "Meridian Consulting",
+  "invoice_number": "2026/88",
+  "invoice_date": "2026-09-30",
+  "due_date": "2026-10-14",
+  "currency": "EUR",
+  "currency_detail": null,
+  "category": "services",
+  "category_detail": null,
+  "line_items": [
+    {
+      "description": "Configuration of the new accounting software, 12 hours",
+      "quantity": 12,
+      "amount": 1440.0
+    },
+    {
+      "description": "Training session for finance staff on the software",
+      "quantity": 1,
+      "amount": 600.0
+    }
+  ],
+  "stated_total": 2040.0,
+  "calculated_total": 2040.0,
+  "conflict_detected": false
+}

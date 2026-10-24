@@ -1,0 +1,8 @@
+CLOUDNEST LTD                 INVOICE CN-5520
+Date: 1 Oct 2026     Payment due: 31 Oct 2026     Currency: GBP
+
+Description                        Amount
+Cloud hosting, September           1,200.00
+Backup storage, 2 TB                 180.00
+Support plan                         250.00
+TOTAL DUE                          1,730.00

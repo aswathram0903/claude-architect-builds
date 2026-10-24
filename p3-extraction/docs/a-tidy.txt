@@ -1,0 +1,10 @@
+NORDLICHT SOFTWARE GMBH
+Invoice no: NS-2026-0412
+Invoice date: 2026-09-14
+Due date: 2026-10-14
+
+Item                         Qty   Amount
+Team licence, annual          10   4,800.00 EUR
+Onboarding workshop            1     900.00 EUR
+
+Total: 5,700.00 EUR

@@ -1,0 +1,25 @@
+{
+  "vendor": "Quick Print Studio",
+  "invoice_number": "7781",
+  "invoice_date": "2026-09-18",
+  "due_date": null,
+  "currency": "unknown",
+  "currency_detail": null,
+  "category": "other",
+  "category_detail": "Printing services",
+  "line_items": [
+    {
+      "description": "200 x business cards",
+      "quantity": 200,
+      "amount": 64.0
+    },
+    {
+      "description": "50 x A3 posters",
+      "quantity": 50,
+      "amount": 87.5
+    }
+  ],
+  "stated_total": 151.5,
+  "calculated_total": 151.5,
+  "conflict_detected": false
+}
