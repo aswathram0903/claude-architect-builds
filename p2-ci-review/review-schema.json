@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": {"type": "string"},
+          "line": {"type": "integer"},
+          "category": {"type": "string", "enum": ["bug", "error-handling", "security"]},
+          "issue": {"type": "string"},
+          "fix": {"type": "string"}
+        },
+        "required": ["file", "line", "category", "issue", "fix"]
+      }
+    }
+  },
+  "required": ["findings"]
+}
