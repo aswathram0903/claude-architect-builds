@@ -9,6 +9,7 @@ ORDERS = {
     "A-5001": {"customer_id": "C-100", "item": "Desk lamp", "amount": 49.0, "status": "delivered", "damage_photo": True},
     "A-5002": {"customer_id": "C-100", "item": "Office chair", "amount": 640.0, "status": "delivered", "damage_photo": False},
     "A-7001": {"customer_id": "C-200", "item": "Monitor", "amount": 310.0, "status": "in transit", "damage_photo": False},
+    "A-5003": {"customer_id": "C-100", "item": "Standing desk", "amount": 820.0, "status": "delivered", "damage_photo": True},
 }
 
 _flaky = {"A-7001": 1}  # the first lookup of this order fails with a temporary error
