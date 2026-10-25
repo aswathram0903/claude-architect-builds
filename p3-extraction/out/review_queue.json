@@ -1,0 +1,167 @@
+[
+  {
+    "document": "a-tidy",
+    "decision": "AUTO-APPROVE",
+    "retried": true,
+    "reasons": [],
+    "extraction": {
+      "vendor": "NORDLICHT SOFTWARE GMBH",
+      "invoice_number": "NS-2026-0412",
+      "invoice_date": "2026-09-14",
+      "due_date": "2026-10-14",
+      "currency": "EUR",
+      "currency_detail": null,
+      "category": "software",
+      "category_detail": null,
+      "line_items": [
+        {
+          "description": "Team licence, annual",
+          "quantity": 10,
+          "amount": 4800.0
+        },
+        {
+          "description": "Onboarding workshop",
+          "quantity": 1,
+          "amount": 900.0
+        }
+      ],
+      "stated_total": 5700.0,
+      "calculated_total": 5700.0,
+      "conflict_detected": false
+    }
+  },
+  {
+    "document": "b-email",
+    "decision": "AUTO-APPROVE",
+    "retried": false,
+    "reasons": [],
+    "extraction": {
+      "vendor": "Harbourline IT",
+      "invoice_number": null,
+      "invoice_date": "2026-10-02",
+      "due_date": "2026-10-30",
+      "currency": "USD",
+      "currency_detail": null,
+      "category": "services",
+      "category_detail": null,
+      "line_items": [
+        {
+          "description": "Laptop setup for new starters (3 laptops at 1,150 USD each)",
+          "quantity": 3,
+          "amount": 3450
+        },
+        {
+          "description": "Network move engineer time (6 hours at 120 USD per hour)",
+          "quantity": 6,
+          "amount": 720
+        }
+      ],
+      "stated_total": 4170,
+      "calculated_total": 4170,
+      "conflict_detected": false
+    }
+  },
+  {
+    "document": "c-missing",
+    "decision": "HUMAN REVIEW",
+    "retried": false,
+    "reasons": [
+      "No due date in the document. Payment cannot be scheduled.",
+      "No currency in the document."
+    ],
+    "extraction": {
+      "vendor": "Quick Print Studio",
+      "invoice_number": "7781",
+      "invoice_date": "2026-09-18",
+      "due_date": null,
+      "currency": "unknown",
+      "currency_detail": null,
+      "category": "other",
+      "category_detail": "Printing services",
+      "line_items": [
+        {
+          "description": "200 x business cards",
+          "quantity": 200,
+          "amount": 64.0
+        },
+        {
+          "description": "50 x A3 posters",
+          "quantity": 50,
+          "amount": 87.5
+        }
+      ],
+      "stated_total": 151.5,
+      "calculated_total": 151.5,
+      "conflict_detected": false
+    }
+  },
+  {
+    "document": "d-conflict",
+    "decision": "HUMAN REVIEW",
+    "retried": true,
+    "reasons": [
+      "The stated total is 1730.0, but the line items add up to 1630.0. Check that each amount is the line total, not the unit price."
+    ],
+    "extraction": {
+      "vendor": "CLOUDNEST LTD",
+      "invoice_number": "CN-5520",
+      "invoice_date": "2026-10-01",
+      "due_date": "2026-10-31",
+      "currency": "GBP",
+      "currency_detail": null,
+      "category": "services",
+      "category_detail": null,
+      "line_items": [
+        {
+          "description": "Cloud hosting, September",
+          "quantity": 1,
+          "amount": 1200.0
+        },
+        {
+          "description": "Backup storage, 2 TB",
+          "quantity": 1,
+          "amount": 180.0
+        },
+        {
+          "description": "Support plan",
+          "quantity": 1,
+          "amount": 250.0
+        }
+      ],
+      "stated_total": 1730.0,
+      "calculated_total": 1630.0,
+      "conflict_detected": true
+    }
+  },
+  {
+    "document": "e-ambiguous",
+    "decision": "AUTO-APPROVE + SPOT CHECK",
+    "retried": false,
+    "reasons": [],
+    "extraction": {
+      "vendor": "Meridian Consulting",
+      "invoice_number": "2026/88",
+      "invoice_date": "2026-09-30",
+      "due_date": "2026-10-14",
+      "currency": "EUR",
+      "currency_detail": null,
+      "category": "services",
+      "category_detail": null,
+      "line_items": [
+        {
+          "description": "Configuration of the new accounting software, 12 hours",
+          "quantity": 12,
+          "amount": 1440.0
+        },
+        {
+          "description": "Training session for finance staff on the software",
+          "quantity": 1,
+          "amount": 600.0
+        }
+      ],
+      "stated_total": 2040.0,
+      "calculated_total": 2040.0,
+      "conflict_detected": false
+    }
+  }
+]
