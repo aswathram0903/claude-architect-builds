@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P3 — Extraction (1)</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p3-1">P3.1</span><span data-t="p3-2">P3.2</span><span data-t="p3-3">P3.3</span><span data-t="p3-4">P3.4</span><span data-t="p3-5">P3.5</span><span data-t="p3-6">P3.6</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P3</div>
+
+<p><a id="top"></a></p>
+<h1>P3 · Session 1 — Structured extraction</h1>
+<h3>90 min · Scenario 6: Structured Data Extraction</h3>
+
+<p><strong>How to use this page:</strong> one grey box = one complete message or command. Click <strong>COPY</strong>, paste, press Return.</p>
+
+<blockquote>
+<p><strong>The project in one minute.</strong> A finance team receives invoices in every shape: tidy PDFs, emails, scanned receipts. Your program reads each one with Claude and fills in the same fixed form every time, so another system can load it. It must never invent a value that is not on the page. This is your first code that calls Claude directly through the API.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>4.3</strong> Structured output with a tool and a JSON schema: forced tool, nullable fields, enum + "other"</td><td>D4 · 20%</td><td>P3.3, P3.4</td></tr>
+<tr><td><strong>4.2</strong> Few-shot examples for ambiguous cases</td><td>D4 · 20%</td><td>P3.5</td></tr>
+<tr><td><strong>2.3</strong> <code>tool_choice</code></td><td>D2 · 18%</td><td>P3.3</td></tr>
+</tbody>
+</table>
+<p>Session 2 adds the validation-retry loop (4.4), the Batch API (4.5) and human review routing (5.5).</p>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>15 min</td><td>P3.1 · Set up the project and your API key</td></tr>
+<tr><td>10 min</td><td>P3.2 · Five invoices that are hard on purpose</td></tr>
+<tr><td>25 min</td><td>P3.3 · Extract with a forced tool and a schema</td></tr>
+<tr><td>15 min</td><td>P3.4 · Prove that null stops invention</td></tr>
+<tr><td>20 min</td><td>P3.5 · Few-shot examples for the hard cases</td></tr>
+<tr><td>5 min</td><td>P3.6 · Commit, say it back</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Product facts move.</strong> Model names and SDK details change. The code uses the model name <code>claude-sonnet-5-5</code>. If the API says the model is not found, check the current names at docs.claude.com → Models, and change the one line <code>MODEL = ...</code>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Cost.</strong> This session makes about 25 API calls. Expect well under 1 USD of Console credit.</p>
+</blockquote>
+
+<hr />
+<p><a id="p3-1"></a></p>
+<h1>P3.1 · Set up the project and your API key</h1>
+<h3>15 min</h3>
+<hr />
+<p><strong>The one idea:</strong> your code needs a library to talk to Claude, and a key that proves who pays. The key lives only in your Terminal settings, never in a file of the project and never in a chat.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>API</strong>: the way your own program sends requests to Claude, without the chat app.</li>
+<li><strong>SDK</strong>: a ready-made library that makes those requests easy. Here: the <code>anthropic</code> Python package.</li>
+</ul>
+
+<h2>P3.1.1 · Check the key</h2>
+<p>In the Terminal, run:</p>
+<pre><code>echo ${ANTHROPIC_API_KEY:0:7}</code></pre>
+<p><strong>Checkpoint ✅</strong> You see <code>sk-ant-</code>. Then skip to P3.1.3.</p>
+
+<h2>P3.1.2 · Only if you saw nothing: store the key</h2>
+<ol>
+<li>Open your Terminal settings file in TextEdit:</li>
+</ol>
+<pre><code>touch ~/.zshrc &amp;&amp; open -e ~/.zshrc</code></pre>
+<ol start="2">
+<li>At the end of the file, type this line by hand, with your real key from console.anthropic.com between the quotes:<br /><code>export ANTHROPIC_API_KEY="sk-ant-..."</code></li>
+<li>Save and close TextEdit.</li>
+<li>Load it and check again:</li>
+</ol>
+<pre><code>source ~/.zshrc &amp;&amp; echo ${ANTHROPIC_API_KEY:0:7}</code></pre>
+<blockquote>
+<p><strong>Never paste your key into the coaching chat, into Claude Code, or into any project file.</strong> If a key ever reaches GitHub, delete it in the Console at once and make a new one.</p>
+</blockquote>
+
+<h2>P3.1.2b · Keep Claude Code on your Pro plan</h2>
+<p>When <code>ANTHROPIC_API_KEY</code> is set, Claude Code uses the key and bills your Console credits instead of your Pro plan. Your Python code needs the key; Claude Code does not. This line makes <code>claude</code> ignore the key:</p>
+<pre><code>printf "\nalias claude='env -u ANTHROPIC_API_KEY claude'\n" &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc &amp;&amp; type claude</code></pre>
+<p>The last line must say <code>claude is an alias for env -u ANTHROPIC_API_KEY claude</code>. Always type <code>claude</code> in lower case.</p>
+<p><strong>Checkpoint ✅</strong> Start <code>claude</code>. The header shows <strong>Claude Pro</strong>, not "API Usage Billing", and there is no warning about both being set. Type <code>/exit</code>.</p>
+
+<h2>P3.1.3 · Make the project</h2>
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds &amp;&amp; mkdir -p p3-extraction &amp;&amp; cd p3-extraction &amp;&amp; uv init --bare &amp;&amp; uv add anthropic</code></pre>
+<p><strong>Checkpoint ✅</strong> uv prints "Installed … packages" and the folder has a <code>pyproject.toml</code>. If an install fails while "building" a package, stop and send me a screenshot: that is the Intel Mac problem from P1, and I will give you a fix.</p>
+
+<hr />
+<p><a id="p3-2"></a></p>
+<h1>P3.2 · Five invoices that are hard on purpose</h1>
+<h3>10 min</h3>
+<hr />
+<p><strong>The one idea:</strong> real documents are messy. Each test invoice hides one problem your program must handle without inventing anything.</p>
+<table>
+<thead><tr><th>File</th><th>The hidden problem</th></tr></thead>
+<tbody>
+<tr><td><code>a-tidy.txt</code></td><td>None. The control case.</td></tr>
+<tr><td><code>b-email.txt</code></td><td>Written as an email, no invoice number, dates in words, laptops and labour mixed</td></tr>
+<tr><td><code>c-missing.txt</code></td><td>No due date and no currency anywhere</td></tr>
+<tr><td><code>d-conflict.txt</code></td><td>The stated total does not match the line items</td></tr>
+<tr><td><code>e-ambiguous.txt</code></td><td>Is software set-up "software" or "services"?</td></tr>
+</tbody>
+</table>
+<p>Start Claude Code inside <code>p3-extraction</code>:</p>
+<pre><code>claude</code></pre>
+<p>Paste:</p>
+<pre><code>Create these five files in a new folder docs/ with exactly the content shown, and nothing else. They are fictional test invoices.
+
+=== docs/a-tidy.txt ===
+NORDLICHT SOFTWARE GMBH
+Invoice no: NS-2026-0412
+Invoice date: 2026-09-14
+Due date: 2026-10-14
+
+Item                         Qty   Amount
+Team licence, annual          10   4,800.00 EUR
+Onboarding workshop            1     900.00 EUR
+
+Total: 5,700.00 EUR
+
+=== docs/b-email.txt ===
+From: billing@harbourline-it.example
+Subject: Your September charges
+
+Hi,
+as agreed, here is what we charged for September. We set up 3 laptops for your new starters
+at 1,150 dollars each, and our engineer spent 6 hours on the network move, billed at 120 dollars an hour.
+Please pay the 4,170 USD by the 30th of October 2026. This note was sent on 2 October 2026.
+
+Thanks, Harbourline IT
+
+=== docs/c-missing.txt ===
+Quick Print Studio
+Receipt 7781 - 18/09/2026
+
+200 x business cards ........ 64.00
+50 x A3 posters ............. 87.50
+Total ....................... 151.50
+
+=== docs/d-conflict.txt ===
+CLOUDNEST LTD                 INVOICE CN-5520
+Date: 1 Oct 2026     Payment due: 31 Oct 2026     Currency: GBP
+
+Description                        Amount
+Cloud hosting, September           1,200.00
+Backup storage, 2 TB                 180.00
+Support plan                         250.00
+TOTAL DUE                          1,730.00
+
+=== docs/e-ambiguous.txt ===
+Invoice 2026/88 from Meridian Consulting
+Date: 2026-09-30, payable within 14 days. Currency: EUR.
+
+1. Configuration of the new accounting software, 12 hours ........ 1,440.00
+2. Training session for finance staff on the software ............... 600.00
+Total .......................................................... 2,040.00</code></pre>
+<p><strong>Checkpoint ✅</strong> <code>docs/</code> holds five <code>.txt</code> files. Look at <code>d-conflict.txt</code>: the three amounts add up to 1,630, but it says 1,730.</p>
+
+<hr />
+<p><a id="p3-3"></a></p>
+<h1>P3.3 · Extract with a forced tool and a schema</h1>
+<h3>25 min · <span class="tag">4.3</span> <span class="tag">2.3</span></h3>
+<hr />
+<p><strong>The one idea:</strong> you do not ask Claude to "reply in JSON". You give it a tool whose input is your form, and you force it to call that tool. The API then returns the form already filled in, in the right shape.</p>
+<p>Four terms:</p>
+<ul>
+<li><strong>Tool</strong>: a named action Claude can call. Here the tool <code>record_invoice</code> does nothing itself. Its only job is to make Claude fill in its input.</li>
+<li><strong><code>input_schema</code></strong>: the JSON schema of the tool's input, which is your form.</li>
+<li><strong><code>tool_choice</code></strong>: tells Claude whether it must call a tool. <code>{"type":"tool","name":"record_invoice"}</code> means "you must call exactly this tool".</li>
+<li><strong>Nullable field</strong>: a field whose type is <code>["string","null"]</code>. Claude may answer <code>null</code>, which means "the document does not say".</li>
+</ul>
+
+<h2>P3.3.1 · Create the extractor</h2>
+<p>Paste into Claude Code:</p>
+<pre><code>Create extract.py with exactly this content, and nothing else. Do not run it.
+
+"""P3: extract invoice data with tool_use and a JSON schema."""
+import json
+import pathlib
+import sys
+
+import anthropic
+
+MODEL = "claude-sonnet-5-5"  # check docs.claude.com for current model names
+client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
+
+INVOICE_TOOL = {
+    "name": "record_invoice",
+    "description": "Record the data from ONE invoice. Use null for any field the document does not state. Never guess.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "vendor": {"type": "string"},
+            "invoice_number": {"type": ["string", "null"]},
+            "invoice_date": {"type": ["string", "null"], "description": "YYYY-MM-DD"},
+            "due_date": {"type": ["string", "null"], "description": "YYYY-MM-DD. null if the document gives no date."},
+            "currency": {"type": "string", "enum": ["EUR", "USD", "GBP", "INR", "other", "unknown"]},
+            "currency_detail": {"type": ["string", "null"], "description": "Only when currency is 'other'"},
+            "category": {"type": "string", "enum": ["software", "hardware", "services", "other"]},
+            "category_detail": {"type": ["string", "null"], "description": "Only when category is 'other'"},
+            "line_items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "description": {"type": "string"},
+                        "quantity": {"type": "number"},
+                        "amount": {"type": "number"},
+                    },
+                    "required": ["description", "quantity", "amount"],
+                },
+            },
+            "stated_total": {"type": ["number", "null"], "description": "The total exactly as written on the invoice"},
+            "calculated_total": {"type": "number", "description": "The sum of the line item amounts"},
+            "conflict_detected": {"type": "boolean", "description": "True if stated_total and calculated_total differ"},
+        },
+        "required": [
+            "vendor", "invoice_number", "invoice_date", "due_date", "currency", "currency_detail",
+            "category", "category_detail", "line_items", "stated_total", "calculated_total", "conflict_detected",
+        ],
+    },
+}
+
+SYSTEM = "You extract invoice data. Copy what the document states. If a value is not in the document, use null. Do not infer or invent values."
+
+FEW_SHOT = """
+
+Category rules, with examples:
+- "Annual licence for design software" -> software (the thing bought is the software itself).
+- "Engineer installed and configured the firewall, 5 hours" -> services (people's time, even when the subject is software or hardware).
+- "Two monitors delivered and installed" -> hardware (the thing bought is a device; installation is a small part).
+- Laptops bought AND engineer hours billed, with neither clearly the main item -> other, category_detail "mixed: hardware + services".
+"""
+
+
+def extract(text: str, extra_system: str = "") -> dict:
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=1024,
+        system=SYSTEM + extra_system,
+        tools=[INVOICE_TOOL],
+        tool_choice={"type": "tool", "name": "record_invoice"},
+        messages=[{"role": "user", "content": f"<document>\n{text}\n</document>"}],
+    )
+    for block in response.content:
+        if block.type == "tool_use":
+            return block.input
+    raise RuntimeError(f"No tool call. stop_reason={response.stop_reason}")
+
+
+if __name__ == "__main__":
+    use_examples = "--few-shot" in sys.argv
+    files = [a for a in sys.argv[1:] if not a.startswith("--")]
+    files = files or sorted(str(p) for p in pathlib.Path("docs").glob("*.txt"))
+    out = pathlib.Path("out")
+    out.mkdir(exist_ok=True)
+    for f in files:
+        data = extract(pathlib.Path(f).read_text(), FEW_SHOT if use_examples else "")
+        name = pathlib.Path(f).stem
+        (out / f"{name}.json").write_text(json.dumps(data, indent=2))
+        print(f"\n=== {name} ===\n{json.dumps(data, indent=2)}")</code></pre>
+<p>Type <code>/exit</code>. Then read the file in Antigravity and find these four lines. They are the whole lesson:</p>
+<table>
+<thead><tr><th>Line</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>"due_date": {"type": ["string", "null"] ...}</code></td><td>Allows "not stated" as an answer</td></tr>
+<tr><td><code>"enum": [... "other", "unknown"]</code> plus <code>currency_detail</code></td><td>A fixed list of answers, with a way out for values not on the list</td></tr>
+<tr><td><code>"stated_total"</code>, <code>"calculated_total"</code>, <code>"conflict_detected"</code></td><td>Claude records both totals and flags a mismatch instead of picking one</td></tr>
+<tr><td><code>tool_choice={"type": "tool", "name": "record_invoice"}</code></td><td>Forces the form to be filled in, every time</td></tr>
+</tbody>
+</table>
+
+<h2>P3.3.2 · Run it on all five</h2>
+<pre><code>uv run python extract.py</code></pre>
+<p>Each run prints one filled form. Results are also saved in <code>out/</code>.</p>
+<p><strong>Checkpoint ✅</strong> Check these five things:</p>
+<ul>
+<li><code>a-tidy</code>: everything filled, <code>conflict_detected: false</code>.</li>
+<li><code>b-email</code>: <code>invoice_number: null</code>. The dates are turned into <code>2026-10-02</code> and <code>2026-10-30</code>.</li>
+<li><code>c-missing</code>: <code>due_date: null</code> and <code>currency: "unknown"</code>. Nothing was invented.</li>
+<li><code>d-conflict</code>: <code>stated_total: 1730</code>, <code>calculated_total: 1630</code>, <code>conflict_detected: true</code>.</li>
+<li><code>e-ambiguous</code>: note the <code>due_date</code>. "Payable within 14 days" is not a date on the page. Did Claude write <code>null</code>, or work out 2026-10-14? Either can be defended. Write down what it did.</li>
+</ul>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> You need output in a fixed shape: define it as a tool's input schema and use <code>tool_use</code>. The shape is then guaranteed. Asking for JSON in the prompt is not.</p>
+<p><b>2.</b> You need the tool called every time: force it with <code>tool_choice</code> set to that tool. <code>"any"</code> means "call some tool, your choice". <code>"auto"</code> lets Claude answer in plain text instead.</p>
+<p><b>3.</b> A field the document may not contain: make it nullable. Then "not stated" is a valid answer and Claude does not have to invent one.</p>
+<p><b>4.</b> A fixed list of values that real life can break: add <code>"other"</code> plus a detail field, so new cases are captured instead of forced into a wrong box.</p>
+<p><b>5.</b> The schema fixes the <em>shape</em>, not the <em>truth</em>. Totals that do not add up still pass the schema. That is why you record both totals and a conflict flag.</p>
+<p><em>Trap answer to spot:</em> "add 'return valid JSON only' to the prompt". The tool and schema guarantee the shape. A sentence in the prompt does not.</p>
+</blockquote>
+
+<hr />
+<p><a id="p3-4"></a></p>
+<h1>P3.4 · Prove that null stops invention</h1>
+<h3>15 min · <span class="tag">4.3</span></h3>
+<hr />
+<p><strong>The one idea:</strong> if the form has no way to say "not stated", Claude has to put <em>something</em> in the box. Watch it happen.</p>
+<p>Start Claude Code and paste:</p>
+<pre><code>This is a temporary experiment. In extract.py, change only the due_date field so that its type is "string" instead of ["string", "null"], and change its description to just "YYYY-MM-DD". Change nothing else. Do not run anything.</code></pre>
+<p>Type <code>/exit</code>, then run the receipt that has no due date:</p>
+<pre><code>uv run python extract.py docs/c-missing.txt</code></pre>
+<p><strong>Checkpoint ✅</strong> Look at <code>due_date</code>. Without the null option you usually get an invented date (often the receipt date, or a date some days later), or an empty string. Either way it is wrong data that looks real. Run it twice if the first result looks honest.</p>
+<p>Now undo the experiment. Start Claude Code and paste:</p>
+<pre><code>Undo the experiment: in extract.py, set the due_date field back to exactly
+"due_date": {"type": ["string", "null"], "description": "YYYY-MM-DD. null if the document gives no date."},
+Change nothing else.</code></pre>
+<p>Type <code>/exit</code>, then run <code>uv run python extract.py docs/c-missing.txt</code> again. <strong>Checkpoint ✅</strong> <code>due_date</code> is <code>null</code> again.</p>
+
+<hr />
+<p><a id="p3-5"></a></p>
+<h1>P3.5 · Few-shot examples for the hard cases</h1>
+<h3>20 min · <span class="tag">4.2</span></h3>
+<hr />
+<p><strong>The one idea:</strong> some choices are judgment calls. Is setting up software "software" or "services"? A rule in words leaves room to interpret. A few worked examples show exactly where the line is.</p>
+<p>One term:</p>
+<ul>
+<li><strong>Few-shot examples</strong>: a few worked examples in the prompt that show the right answer for tricky cases. Look at <code>FEW_SHOT</code> in <code>extract.py</code>: four examples, each with the reason.</li>
+</ul>
+
+<h2>P3.5.1 · The consistency test</h2>
+<p>Start Claude Code and paste:</p>
+<pre><code>Create consistency.py with exactly this content, and nothing else. Do not run it.
+
+"""Run the two ambiguous invoices 3 times each, without and with few-shot examples."""
+import pathlib
+
+from extract import FEW_SHOT, extract
+
+DOCS = ["docs/b-email.txt", "docs/e-ambiguous.txt"]
+
+for label, extra in [("WITHOUT examples", ""), ("WITH examples", FEW_SHOT)]:
+    print(f"\n--- {label} ---")
+    for d in DOCS:
+        text = pathlib.Path(d).read_text()
+        results = []
+        for _ in range(3):
+            r = extract(text, extra)
+            results.append(f"{r['category']} ({r['category_detail']})")
+        print(f"{pathlib.Path(d).stem:14} {results}")</code></pre>
+<p>Type <code>/exit</code>, then run it. It makes 12 calls and takes about a minute:</p>
+<pre><code>uv run python consistency.py</code></pre>
+<p><strong>Checkpoint ✅</strong> Compare the two blocks:</p>
+<ul>
+<li><strong>Without examples</strong>, the category may change between runs, or be a reasonable answer that differs from your team's rule.</li>
+<li><strong>With examples</strong>, <code>b-email</code> is <code>other (mixed: hardware + services)</code> and <code>e-ambiguous</code> is <code>services</code>, the same in all three runs.</li>
+</ul>
+<p>If both blocks are already identical, that is a fair result too: the model was consistent on these two. Then look at whether the answer <em>without</em> examples matches your team's rule. Consistent is not the same as right. The examples make it right.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Output varies, or lands on the wrong side of a fuzzy line: add 2–4 examples of exactly those borderline cases, with the reason for each.</p>
+<p><b>2.</b> Pick examples from the cases that actually go wrong, not easy ones. An example of an obvious case teaches nothing.</p>
+<p><b>3.</b> Examples also fix format: different document layouts (an email, a table, a receipt) all end up in the same fields.</p>
+<p><em>Trap answer to spot:</em> "write a longer, more detailed rule in the prompt". More words about a fuzzy line keep it fuzzy. Examples draw the line.</p>
+</blockquote>
+
+<hr />
+<p><a id="p3-6"></a></p>
+<h1>P3.6 · Commit, say it back</h1>
+<h3>5 min</h3>
+<hr />
+<ol>
+<li>Type <code>/exit</code> in every Claude Code session and quit Antigravity.</li>
+<li>In GitHub Desktop, check the list: <code>p3-extraction/</code> with <code>extract.py</code>, <code>consistency.py</code>, <code>docs/</code>, <code>out/</code>, <code>pyproject.toml</code> and <code>uv.lock</code>. There is no <code>.venv</code>, and <strong>no file contains your API key</strong>.</li>
+<li>Commit <code>P3 session 1: tool_use extraction, nullable fields, few-shot</code>, then <strong>Push origin</strong>.</li>
+</ol>
+
+<h2>P3.6.1 · Say it back — no notes, not scored</h2>
+<p>One sentence each, in the coaching chat. Name the <strong>mechanism</strong>, not the result:</p>
+<ol>
+<li>What did Claude put in <code>due_date</code> for the receipt when null was not allowed, and why?</li>
+<li>Why does <code>tool_choice</code> name the tool, instead of <code>"auto"</code>?</li>
+<li>The schema accepted <code>d-conflict</code> without error. Why, and what caught the problem instead?</li>
+</ol>
+
+<h2>P3.7 · Quick reference card</h2>
+<p><strong>Fixed shape:</strong> a tool's <code>input_schema</code> plus <code>tool_use</code>, not "reply in JSON".<br />
+<strong>Always fill the form:</strong> <code>tool_choice: {"type":"tool","name":"..."}</code>. <code>"any"</code> = some tool. <code>"auto"</code> = may answer in text.<br />
+<strong>May be missing:</strong> nullable type <code>["string","null"]</code>, so Claude says null instead of inventing.<br />
+<strong>Fixed list:</strong> enum + <code>"other"</code> + a detail field.<br />
+<strong>Shape ≠ truth:</strong> the schema cannot see that totals do not add up. Record both totals and a conflict flag.<br />
+<strong>Fuzzy line:</strong> 2–4 examples of the borderline cases, each with its reason.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat. Never paste your API key.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>AuthenticationError</code> or "api_key must be set"</td><td>The key is not in this Terminal. Run <code>source ~/.zshrc</code>, then check with <code>echo ${ANTHROPIC_API_KEY:0:7}</code>.</td></tr>
+<tr><td><code>NotFoundError</code> mentioning the model</td><td>The model name changed. Check docs.claude.com → Models and edit the <code>MODEL = ...</code> line.</td></tr>
+<tr><td><code>tool_choice: type "tool" and "any" are not supported for this model</code></td><td>The model is thinking (extended thinking), and a forced tool cannot be combined with thinking. Add <code>thinking={"type": "disabled"},</code> to <code>client.messages.create(...)</code>. If that is refused, set <code>MODEL</code> to a model that allows it (try <code>claude-haiku-5-5</code>). For the exam, forced <code>tool_choice</code> is still the answer for "must always call this tool".</td></tr>
+<tr><td>"credit balance is too low"</td><td>Add credit in console.anthropic.com → Billing. A few dollars is enough for P3–P6.</td></tr>
+<tr><td><code>uv add anthropic</code> fails while "building"</td><td>Send me the screenshot. Do not install Rust or other compilers.</td></tr>
+<tr><td><code>ModuleNotFoundError: anthropic</code></td><td>Run with <code>uv run python ...</code>, not plain <code>python</code>, from inside <code>p3-extraction</code>.</td></tr>
+<tr><td><code>FileNotFoundError: docs/...</code></td><td>You are not in <code>p3-extraction</code>. Run <code>cd ~/Documents/GitHub/claude-architect-builds/p3-extraction</code>.</td></tr>
+<tr><td>Claude Code changed more than the one field in P3.4</td><td>Ask it: "Show me git diff for extract.py", and undo anything except the due_date line.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P5 — Research Desk (2)</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p5-9">P5.9</span><span data-t="p5-10">P5.10</span><span data-t="p5-11">P5.11</span><span data-t="p5-12">P5.12</span><span data-t="p5-13">P5.13</span><span data-t="p5-14">P5.14</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P5</div>
+
+<p><a id="top"></a></p>
+<h1>P5 · Session 2 — Parallel research, one cited report</h1>
+<h3>Mon 26 Oct 2026 · 75 min · Scenario 3: Multi-Agent Research System</h3>
+
+<p><strong>How to use this page:</strong> one grey box = one complete message or command. Click <strong>COPY</strong>, paste, press Return.</p>
+
+<blockquote>
+<p><strong>Where you are.</strong> Session 1 gave you a coordinator and two researchers. Now you add a third subagent, the <strong>synthesiser</strong>. It has no tools at all: it writes one report from the findings the coordinator pastes into its brief. You also time the researchers running <strong>in parallel</strong> against running one after the other. And you plant a broker note whose figures disagree with the annual report, to see whether the report keeps both sides with their sources.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>1.3</strong> Parallel subagents; passing complete findings on</td><td>D1 · 27%</td><td>P5.11, P5.12</td></tr>
+<tr><td><strong>5.6</strong> Provenance; conflicting sources kept side by side</td><td>D5 · 15%</td><td>P5.11, P5.13</td></tr>
+<tr><td><strong>1.6</strong> Splitting a task: fixed pipeline vs dynamic</td><td>D1 · 27%</td><td>P5.10, P5.13</td></tr>
+<tr><td><strong>2.3</strong> Tools per agent (the synthesiser gets none)</td><td>D2 · 18%</td><td>P5.10</td></tr>
+</tbody>
+</table>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>5 min</td><td>P5.9 · Set up</td></tr>
+<tr><td>10 min</td><td>P5.10 · Read the design</td></tr>
+<tr><td>20 min</td><td>P5.11 · Parallel run</td></tr>
+<tr><td>15 min</td><td>P5.12 · Sequential run</td></tr>
+<tr><td>10 min</td><td>P5.13 · Read the conflict</td></tr>
+<tr><td>15 min</td><td>P5.14 · Commit, say it back</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Not yet run live.</strong> The coach could not run this end to end (no API key in the coach's workspace). The code compiles and the hook is tested. <strong>The first place a silent failure would show:</strong> P5.11 checkpoint 3. If the synthesiser's brief is short (under about 1,000 characters), the findings did not reach it. Paste the output in the chat. Two runs, roughly 1 USD in total. Each run stops at 1.50 USD.</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-9"></a></p>
+<h1>P5.9 · Set up</h1>
+<h3>5 min</h3>
+<hr />
+<p>You add two files. <code>research2.py</code> is the session 2 version; <code>research.py</code> stays as it is. <code>broker-note.txt</code> is a short broker note from an <strong>invented</strong> firm, "Example Securities". Its figures are made up on purpose so they will disagree with the annual report. It exists only to test the conflict handling. It is not real research.</p>
+<p>In <code>p5-research-desk</code>, start <code>claude</code> and paste:</p>
+<pre><code>Create two files with exactly this content, and nothing else. Do not run anything.
+
+File 1: broker-note.txt
+
+Broker note - Example Securities - 15 September 2026
+
+Tata Consultancy Services (TCS): quick update
+
+Headcount: we estimate total headcount at about 450,000 at the end of FY2025-26, after higher attrition in the second half.
+Revenue growth: we put FY2025-26 revenue growth at 9.5% in constant currency.
+AI services: we see AI-related deals as a small share of total bookings so far.
+
+File 2: research2.py
+
+"""P5 session 2: research in parallel, then a synthesiser that keeps every claim tied to its source. Paper only."""
+import asyncio
+import sys
+import time
+
+from claude_agent_sdk import (
+    AgentDefinition, AssistantMessage, ClaudeAgentOptions, ClaudeSDKClient,
+    HookMatcher, ResultMessage, ToolUseBlock,
+)
+
+MODEL = "claude-haiku-5-5"  # check docs.claude.com for current model names
+SEQUENTIAL = "--sequential" in sys.argv  # P5.10: one subagent after the other, to compare the time
+
+FINDING_FORMAT = """Return ONLY a JSON list of findings, no other text. Each finding:
+{"claim": "...", "evidence_excerpt": "short exact quote from the source",
+ "source": "URL, or file name and page number", "source_date": "YYYY-MM-DD or unknown",
+ "confidence_basis": "what the claim rests on, e.g. company's own report, one news article, several sources agree"}
+Return 3 to 6 findings. If you find nothing, return [] and do not invent anything."""
+
+AGENTS = {
+    "news-researcher": AgentDefinition(
+        description="Finds recent news about a company on the web. Use for events, analyst views and anything after the annual report.",
+        prompt="You research recent news about one company. Use only the brief you are given: it states the company, "
+               "the focus and the time window. Prefer named, dated sources. " + FINDING_FORMAT,
+        tools=["WebSearch", "WebFetch"],
+        model="inherit",
+        background=False,
+    ),
+    "report-analyst": AgentDefinition(
+        description="Reads local documents: the company's annual report text file and any broker notes. Use for the company's own figures and third-party estimates on file.",
+        prompt="You analyse local documents named in your brief. In tcs-report.txt, pages are marked '=== PAGE n ==='. "
+               "The report is long: use Grep to find the focus topics first, then Read only around the matching lines "
+               "(use offset and limit). Give the file name and page number as the source. " + FINDING_FORMAT,
+        tools=["Read", "Grep"],
+        model="inherit",
+        background=False,
+    ),
+    "synthesiser": AgentDefinition(
+        description="Combines findings from the other subagents into one cited report. Has no tools: everything it needs must be in its brief.",
+        prompt="""You write one research report from the findings in your brief. You have no tools and see nothing except the brief.
+Rules:
+- Every statement in the report carries its source and date in brackets, taken from the findings. No source, no statement.
+- When two findings disagree (for example two different figures for the same thing), put both under the heading "Conflicts",
+  side by side with their sources and dates. Do not pick one, average them or drop one. Say what might explain the
+  difference: different dates, different definitions, or a company source versus a third party.
+- End with "Coverage gaps": topics from the request that no finding covers.
+- Paper-trading research only: no buy or sell advice.""",
+        tools=[],
+        model="inherit",
+        background=False,
+    ),
+}
+
+ORDER = ("Start news-researcher. Wait for its result. Only then start report-analyst."
+         if SEQUENTIAL else
+         "Start news-researcher and report-analyst in the SAME response: two Agent calls in one message, so they run in parallel.")
+
+SYSTEM = f"""You coordinate research on one company for a personal paper-trading watchlist. Paper only: never suggest buying or selling.
+You do not research or write the report yourself. You delegate with the Agent tool, in the foreground, and wait for results.
+
+Steps:
+1. {ORDER}
+   Brief each one completely: subagents do not see this conversation. Include the company (TCS), the focus topics word for word,
+   the time window, and for report-analyst the files tcs-report.txt and broker-note.txt.
+2. When both have answered, start synthesiser. Its brief must contain the user's request and BOTH findings lists in full,
+   pasted exactly as returned (JSON). Do not shorten, merge or re-word them: the sources must survive.
+3. Your final answer is the synthesiser's report, unchanged."""
+
+
+async def scope_tools(input_data, tool_use_id, context):
+    """PreToolUse hook: the coordinator may only delegate, and the synthesiser may use no tools at all."""
+    tool = input_data["tool_name"]
+    reason = None
+    if "agent_id" not in input_data and tool not in ("Agent", "Task"):
+        reason = "The coordinator only delegates. Use the Agent tool to brief a subagent."
+    elif input_data.get("agent_type") == "synthesiser":
+        reason = "The synthesiser has no tools. Write the report from the findings in your brief only."
+    if reason:
+        print(f"\n[HOOK] blocked {input_data.get('agent_type', 'coordinator')} from using {tool}")
+        return {"hookSpecificOutput": {
+            "hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": reason}}
+    return {}
+
+
+async def main(request: str):
+    options = ClaudeAgentOptions(
+        model=MODEL,
+        system_prompt=SYSTEM,
+        agents=AGENTS,
+        tools=["Agent", "Read", "Grep", "WebSearch", "WebFetch"],
+        allowed_tools=["Agent", "Read", "Grep", "WebSearch", "WebFetch"],
+        hooks={"PreToolUse": [HookMatcher(hooks=[scope_tools])]},
+        max_turns=25,
+        max_budget_usd=1.50,
+        env={"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"},  # wait for subagents instead of sending them to the background
+    )
+    print(f"[mode] {'SEQUENTIAL' if SEQUENTIAL else 'PARALLEL'}")
+    start = time.monotonic()
+    coordinator_message, last_id = 0, None
+    async with ClaudeSDKClient(options=options) as client:
+        await client.query(request)
+        async for msg in client.receive_response():
+            if isinstance(msg, AssistantMessage):
+                if msg.parent_tool_use_id is None and msg.message_id != last_id:
+                    coordinator_message += 1  # one API response can arrive as several messages with the same id
+                    last_id = msg.message_id
+                for block in msg.content:
+                    if not isinstance(block, ToolUseBlock):
+                        continue
+                    if msg.parent_tool_use_id is None and block.name in ("Agent", "Task"):
+                        brief = block.input.get("prompt", "")
+                        print(f"\n==&gt; [coordinator message {coordinator_message} · {time.monotonic() - start:.0f}s] "
+                              f"briefs {block.input.get('subagent_type')} ({len(brief)} characters):\n{brief[:600]}"
+                              f"{' …' if len(brief) &gt; 600 else ''}\n")
+                    elif msg.parent_tool_use_id is not None:
+                        print(f"    [subagent] {block.name} {str(block.input)[:120]}")
+            elif isinstance(msg, ResultMessage):
+                elapsed = time.monotonic() - start
+                print(f"\nREPORT:\n{msg.result}\n")
+                print(f"[done] {'SEQUENTIAL' if SEQUENTIAL else 'PARALLEL'} · {elapsed:.0f} seconds · "
+                      f"turns: {msg.num_turns} · cost: ${msg.total_cost_usd or 0:.3f} · result: {msg.subtype}")
+                with open("report-sequential.md" if SEQUENTIAL else "report.md", "w") as f:
+                    f.write(msg.result or "")
+
+
+if __name__ == "__main__":
+    args = [a for a in sys.argv[1:] if a != "--sequential"]
+    asyncio.run(main(" ".join(args) or
+        "Research TCS for my paper-trading watchlist. Focus: revenue growth, AI services, and headcount or attrition. "
+        "Time window: the last 12 months."))</code></pre>
+<p>Type <code>/exit</code>.</p>
+
+<hr />
+<p><a id="p5-10"></a></p>
+<h1>P5.10 · Read the design</h1>
+<h3>10 min · <span class="tag">2.3</span> <span class="tag">1.6</span></h3>
+<hr />
+<p>Two terms:</p>
+<ul>
+<li><strong>Synthesiser</strong>: a subagent that only combines. <code>tools=[]</code>, so it cannot search or read. Everything it knows comes from its brief, and that is the point: if the findings are not pasted into the brief, they do not exist for it.</li>
+<li><strong>Fixed pipeline (prompt chaining)</strong>: the steps are set in advance (research, then synthesise), and each step's output feeds the next. The other way is <strong>dynamic</strong> splitting: the coordinator decides as it goes which subagents to call and whether to go back for more.</li>
+</ul>
+<p>In Antigravity, open <code>research2.py</code> and find:</p>
+<table>
+<thead><tr><th>Find</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>"synthesiser": AgentDefinition(...)</code></td><td>No tools. Its rules: every statement carries a source; disagreements go under "Conflicts", side by side; end with "Coverage gaps".</td></tr>
+<tr><td><code>ORDER</code></td><td>Parallel (default): both researchers in the <strong>same</strong> coordinator message. <code>--sequential</code>: one, wait, then the other.</td></tr>
+<tr><td><code>SYSTEM</code> step 2</td><td>The coordinator must paste both findings lists <strong>in full, unchanged</strong> into the synthesiser's brief.</td></tr>
+<tr><td><code>scope_tools()</code></td><td>The hook now has two rules: the coordinator only delegates, and the synthesiser may use no tool at all. The hook knows which agent is asking from <code>agent_type</code>.</td></tr>
+<tr><td><code>coordinator message n · s</code> in the output</td><td>Shows which coordinator message started each subagent, and after how many seconds.</td></tr>
+</tbody>
+</table>
+
+<h2>P5.10.1 · Predict first</h2>
+<p>Write down your answers. Don't run anything yet.</p>
+<ol>
+<li>In the parallel run, what coordinator message number will each of the two researcher briefs show?</li>
+<li>Will the synthesiser's brief be longer or shorter than the researchers' briefs? Why?</li>
+<li>The annual report and the broker note give different headcounts. What should the report do with the two figures?</li>
+</ol>
+
+<hr />
+<p><a id="p5-11"></a></p>
+<h1>P5.11 · Parallel run</h1>
+<h3>20 min · <span class="tag">1.3</span> <span class="tag">5.6</span></h3>
+<hr />
+<pre><code>uv run python research2.py</code></pre>
+<p><strong>Checkpoint ✅</strong></p>
+<ol>
+<li><code>[mode] PARALLEL</code>.</li>
+<li>Two researcher briefs, both marked <code>coordinator message 1</code> (or the same number). Same message = both started in one go = parallel.</li>
+<li>A <code>briefs synthesiser</code> block with a later message number and a <strong>long</strong> brief: thousands of characters, with the JSON findings visible in the first 600.</li>
+<li>No <code>[subagent]</code> lines after the synthesiser brief. It has no tools. If you see <code>[HOOK] blocked synthesiser</code>, it tried and the hook said no.</li>
+<li><code>REPORT</code> with sources in brackets, a <strong>Conflicts</strong> section and a <strong>Coverage gaps</strong> section. Saved as <code>report.md</code>.</li>
+<li>The last line shows <code>PARALLEL · N seconds</code>. <strong>Write N down.</strong></li>
+</ol>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> To run subagents in parallel, the coordinator starts them all in <strong>one</strong> response: several Task calls in the same message. One call per turn is one after the other, however fast each one is.</p>
+<p><b>2.</b> The next subagent gets the earlier findings <strong>in full in its prompt</strong>. It does not see them otherwise. <em>Example: the synthesiser's brief here contains both JSON lists.</em></p>
+<p><b>3.</b> Pass findings as structured data that keeps the content apart from where it came from (claim / quote / source / date). Re-worded prose loses the sources on the way.</p>
+<p><em>Trap answer to spot:</em> "the coordinator summarises the findings for the synthesiser to save space". The summary drops the sources, and the report can no longer cite.</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-12"></a></p>
+<h1>P5.12 · Sequential run</h1>
+<h3>15 min · <span class="tag">1.3</span></h3>
+<hr />
+<p><strong>Predict first:</strong> how many seconds longer will this run take, and why?</p>
+<pre><code>uv run python research2.py --sequential</code></pre>
+<p><strong>Checkpoint ✅</strong></p>
+<ol>
+<li><code>[mode] SEQUENTIAL</code>.</li>
+<li>The two researcher briefs show <strong>different</strong> coordinator message numbers, and the second starts only after the first one's <code>[subagent]</code> lines have stopped.</li>
+<li><code>SEQUENTIAL · M seconds</code>. Compare M with N from P5.11. Parallel should be faster by roughly the time of the shorter researcher.</li>
+</ol>
+<p>Run times vary from run to run (web search speed, model load). If the difference is small or reversed, look at the message numbers: those prove the order, the seconds only suggest it.</p>
+
+<hr />
+<p><a id="p5-13"></a></p>
+<h1>P5.13 · Read the conflict</h1>
+<h3>10 min · <span class="tag">5.6</span> <span class="tag">1.6</span></h3>
+<hr />
+<p>Open <code>report.md</code> and check the <strong>Conflicts</strong> section against this list:</p>
+<table>
+<thead><tr><th>Check</th><th>Good</th><th>Bad</th></tr></thead>
+<tbody>
+<tr><td>Both figures shown?</td><td>The report's headcount and the broker's 450,000, each with its source and date</td><td>One figure only, or an average</td></tr>
+<tr><td>Sources kept?</td><td>"tcs-report.txt, page n" and "broker-note.txt, 2026-09-15"</td><td>"Sources disagree" with no names</td></tr>
+<tr><td>Possible reason given?</td><td>Company's own count vs a third-party estimate; different dates</td><td>The report decides which one is "right"</td></tr>
+</tbody>
+</table>
+<p>If the conflict is missing, check the <code>[subagent]</code> lines of report-analyst: did it Read <code>broker-note.txt</code>? If not, the coordinator left the file out of its brief. That is the session 1 lesson again.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> When sources disagree, keep both with their sources and dates, and say what might explain the difference. Don't pick one quietly. <em>Example: "approx. X employees (annual report, p. n, March 2026) vs about 450,000 (broker note, Sept 2026)".</em></p>
+<p><b>2.</b> Every claim in the final output keeps its link to a source. A statement that has lost its source cannot be checked.</p>
+<p><b>3.</b> A fixed pipeline (research, then synthesise) suits a task whose steps are known in advance. When the steps depend on what is found, the coordinator decides as it goes. <em>Example: it sees a coverage gap and sends a researcher back with a narrower question.</em></p>
+<p><em>Trap answer to spot:</em> "average the two figures" or "use the more recent one". Both hide the disagreement from the reader.</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-14"></a></p>
+<h1>P5.14 · Commit, say it back</h1>
+<h3>15 min</h3>
+<hr />
+<p>Type <code>/exit</code> in Claude Code and quit Antigravity. In GitHub Desktop, commit: <code>P5 session 2: synthesiser with full findings, parallel vs sequential, planted conflict kept side by side</code>, then <strong>Push origin</strong>. Write your two times in the commit description.</p>
+
+<h2>P5.14.1 · Say it back — no notes, not scored</h2>
+<p>One sentence each, starting with "because". Before you send, use the test: <strong>could I have written this sentence without understanding the design?</strong> If yes, it is a <em>what</em>, not a <em>why</em>.</p>
+<ol>
+<li>The parallel run was faster even though each researcher did the same work. Because…</li>
+<li>The coordinator must paste the findings into the synthesiser's brief unchanged, not summarised. Because…</li>
+<li>The report shows two headcounts instead of choosing one. Because…</li>
+</ol>
+
+<h2>P5.15 · Quick reference card</h2>
+<p><strong>Parallel:</strong> several Task calls in one coordinator response.<br />
+<strong>Next agent needs earlier results:</strong> paste them in full into its prompt, as structured data with sources.<br />
+<strong>Synthesiser:</strong> no tools; works only from its brief.<br />
+<strong>Conflicts:</strong> keep both values with source and date; give a possible reason; never average or quietly pick.<br />
+<strong>Fixed pipeline</strong> when the steps are known; <strong>dynamic</strong> when the next step depends on what was found.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat. Never paste your API key.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>Synthesiser brief is short, or the report has no sources</td><td>The coordinator summarised instead of pasting. Run again once. If it repeats, paste the output here.</td></tr>
+<tr><td>No Conflicts section</td><td>Check whether report-analyst read <code>broker-note.txt</code> (its <code>[subagent]</code> lines). If not, run again.</td></tr>
+<tr><td>Both briefs show different message numbers in the parallel run</td><td>First compare their seconds: if they are within a second or two, they came from the same response (older copies of the script counted each part of a response separately). If the seconds are far apart, the model chose to go one at a time despite the prompt. Run once more. It is a request in a prompt, not a rule in code: note it, it is a good exam point.</td></tr>
+<tr><td>Summary says subagents are "still running"</td><td>Check that the <code>env=</code> line and <code>background=False</code> are in <code>research2.py</code>.</td></tr>
+<tr><td><code>result: error_max_budget_usd</code></td><td>The 1.50 USD cap was hit. Paste the output here. Do not raise it.</td></tr>
+<tr><td>"claude.ai connectors are disabled…"</td><td>Harmless. Same as P4.10.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

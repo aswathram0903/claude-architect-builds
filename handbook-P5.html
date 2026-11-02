@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P5 — Research Desk (1)</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p5-1">P5.1</span><span data-t="p5-2">P5.2</span><span data-t="p5-3">P5.3</span><span data-t="p5-4">P5.4</span><span data-t="p5-5">P5.5</span><span data-t="p5-6">P5.6</span><span data-t="p5-7">P5.7</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P5</div>
+
+<p><a id="top"></a></p>
+<h1>P5 · Session 1 — A coordinator and two subagents</h1>
+<h3>Mon 26 Oct 2026 · 90 min · Scenario 3: Multi-Agent Research System</h3>
+
+<p><strong>How to use this page:</strong> one grey box = one complete message or command. Click <strong>COPY</strong>, paste, press Return.</p>
+
+<blockquote>
+<p><strong>Where you are.</strong> In P4 one agent did everything. Now you split the work. A <strong>coordinator</strong> agent plans and delegates. Two <strong>subagents</strong> do the research: one reads the news, one reads the TCS annual report. Each subagent has only its own tools and sees only the brief the coordinator writes for it. That is exam Scenario 3. <strong>Paper only:</strong> this is a research tool for a watchlist, not trading advice.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>1.2</strong> Coordinator and subagents (hub and spoke)</td><td>D1 · 27%</td><td>P5.3, P5.4, P5.6</td></tr>
+<tr><td><strong>1.3</strong> Starting subagents and passing them context</td><td>D1 · 27%</td><td>P5.4, P5.5</td></tr>
+<tr><td><strong>2.3</strong> Giving each agent only the tools it needs</td><td>D2 · 18%</td><td>P5.3, P5.6</td></tr>
+<tr><td><strong>5.6</strong> Provenance: every claim keeps its source (first contact; deeper in session 2)</td><td>D5 · 15%</td><td>P5.2, P5.4</td></tr>
+</tbody>
+</table>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>10 min</td><td>P5.1 · Set up</td></tr>
+<tr><td>10 min</td><td>P5.2 · Turn the report into searchable text</td></tr>
+<tr><td>15 min</td><td>P5.3 · Read the design</td></tr>
+<tr><td>20 min</td><td>P5.4 · First run</td></tr>
+<tr><td>15 min</td><td>P5.5 · A lazy brief</td></tr>
+<tr><td>10 min</td><td>P5.6 · The coordinator cannot do the work itself</td></tr>
+<tr><td>10 min</td><td>P5.7 · Commit, say it back</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Product facts move.</strong> Checked against <code>claude-agent-sdk</code> 0.2.x for Python. The SDK calls the subagent tool <strong>Agent</strong>. The exam guide calls it <strong>Task</strong>. Same thing: answer the exam with "Task". About 6 runs, roughly 1–2 USD in total. Each run stops at 1 USD (<code>max_budget_usd</code>).</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-1"></a></p>
+<h1>P5.1 · Set up</h1>
+<h3>10 min</h3>
+<hr />
+<p>Your PDF is already in <code>p5-research-desk/</code> as <code>tcs-annual-report.pdf</code>. The <code>cryptography&lt;49</code> part keeps the install on a version with a ready-made Intel Mac build (see P4.9). <code>pypdf</code> reads PDFs and needs no compiling.</p>
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds/p5-research-desk &amp;&amp; uv init --bare &amp;&amp; uv add claude-agent-sdk "cryptography&lt;49" pypdf</code></pre>
+<p><strong>Checkpoint ✅</strong> "Installed … packages", no "Failed to build".</p>
+
+<h2>P5.1.1 · Keep the big files out of git</h2>
+<p>The report is large and is not your work. This adds two lines to the root <code>.gitignore</code>, each on a new line, then shows the file.</p>
+<pre><code>printf "\np5-research-desk/*.pdf\np5-research-desk/tcs-report.txt\n" &gt;&gt; ../.gitignore &amp;&amp; cat ../.gitignore</code></pre>
+<p><strong>Checkpoint ✅</strong> The last two lines are <code>p5-research-desk/*.pdf</code> and <code>p5-research-desk/tcs-report.txt</code>, each on its own line.</p>
+
+<hr />
+<p><a id="p5-2"></a></p>
+<h1>P5.2 · Turn the report into searchable text</h1>
+<h3>10 min · <span class="tag">5.6</span></h3>
+<hr />
+<p><strong>The one idea:</strong> an agent cannot cite what it cannot locate. The script writes the whole report into one text file and puts <code>=== PAGE n ===</code> before each page. When the report-analyst quotes something, it can say which page it came from. That is <strong>provenance</strong>: where a claim came from, so a person can check it.</p>
+<p>Start <code>claude</code> and paste:</p>
+<pre><code>Create extract_text.py with exactly this content, and nothing else. Do not run it.
+
+"""Turn the annual report PDF into one text file with page markers, so an agent can search it and cite pages."""
+from pypdf import PdfReader
+
+reader = PdfReader("tcs-annual-report.pdf")
+with open("tcs-report.txt", "w") as out:
+    for number, page in enumerate(reader.pages, start=1):
+        out.write(f"\n=== PAGE {number} ===\n")
+        out.write(page.extract_text() or "")
+print(f"pages: {len(reader.pages)}")</code></pre>
+<p>Type <code>/exit</code>, then run:</p>
+<pre><code>uv run python extract_text.py &amp;&amp; wc -l tcs-report.txt &amp;&amp; grep -c -i "attrition" tcs-report.txt</code></pre>
+<p><strong>Checkpoint ✅</strong> You see the page count (a few hundred), the number of lines (thousands), and how many lines mention "attrition" (more than 0). It can take a minute.</p>
+<p><strong>Why not give the agent the PDF?</strong> Hundreds of pages would fill most of a subagent's context, and the important part would get lost in the middle. With a text file the subagent uses <strong>Grep</strong> (search for a word) to find the right pages, then <strong>Read</strong> to read only those lines.</p>
+
+<hr />
+<p><a id="p5-3"></a></p>
+<h1>P5.3 · Read the design</h1>
+<h3>15 min · <span class="tag">1.2</span> <span class="tag">2.3</span></h3>
+<hr />
+<p>Four terms:</p>
+<ul>
+<li><strong>Coordinator</strong>: the main agent. It plans, writes a brief for each subagent, collects the answers and writes the summary. It does no research itself.</li>
+<li><strong>Subagent</strong>: a separate agent with its own instructions, its own tools and a fresh context. It sees nothing of the coordinator's conversation, only the brief.</li>
+<li><strong><code>AgentDefinition</code></strong>: how you define a subagent in the SDK: a <code>description</code> (when to use it), a <code>prompt</code> (its instructions) and <code>tools</code> (the only tools it gets).</li>
+<li><strong>Agent tool (exam: "Task")</strong>: the tool the coordinator calls to start a subagent. Its input is the subagent's name and the brief.</li>
+</ul>
+<p>Start <code>claude</code> and paste:</p>
+<pre><code>Create research.py with exactly this content, and nothing else. Do not run it.
+
+"""P5 session 1: a coordinator that delegates TCS research to two subagents. Paper only, no trading."""
+import asyncio
+import sys
+
+from claude_agent_sdk import (
+    AgentDefinition, AssistantMessage, ClaudeAgentOptions, ClaudeSDKClient,
+    HookMatcher, ResultMessage, ToolUseBlock,
+)
+
+MODEL = "claude-haiku-5-5"  # check docs.claude.com for current model names
+REPORT_FILE = "tcs-report.txt"
+LAZY = "--lazy" in sys.argv  # P5.5: brief the subagents badly on purpose
+
+FINDING_FORMAT = """Return ONLY a JSON list of findings, no other text. Each finding:
+{"claim": "...", "evidence_excerpt": "short exact quote from the source",
+ "source": "URL, or report page number", "source_date": "YYYY-MM-DD or unknown",
+ "confidence_basis": "what the claim rests on, e.g. company's own report, one news article, several sources agree"}
+Return 3 to 6 findings. If you find nothing, return [] and do not invent anything."""
+
+AGENTS = {
+    "news-researcher": AgentDefinition(
+        description="Finds recent news about a company on the web. Use for events, analyst views and anything after the annual report.",
+        prompt="You research recent news about one company. Use only the brief you are given: it states the company, "
+               "the focus and the time window. Prefer named, dated sources. " + FINDING_FORMAT,
+        tools=["WebSearch", "WebFetch"],
+        model="inherit",
+        background=False,
+    ),
+    "report-analyst": AgentDefinition(
+        description="Reads the company's annual report text file. Use for the company's own figures, strategy and stated risks.",
+        prompt="You analyse one annual report saved as a text file. The brief tells you the file name and the focus. "
+               "Pages are marked '=== PAGE n ==='. The file is long: use Grep to find the focus topics first, then Read "
+               "only around the matching lines (use offset and limit). Give the page number as the source. " + FINDING_FORMAT,
+        tools=["Read", "Grep"],
+        model="inherit",
+        background=False,
+    ),
+}
+
+GOOD_BRIEF = f"""Pass each subagent a complete brief in its prompt. Subagents do not see this conversation, so the brief must contain:
+- the company (Tata Consultancy Services, TCS)
+- the focus topics from the user's request, word for word
+- the time window
+- for report-analyst: the file name {REPORT_FILE}
+- the finding format: they already know it, but remind them to return JSON only"""
+
+LAZY_BRIEF = "Keep the subagent prompts very short. Pass each subagent only these three words: 'Research TCS please.'"
+
+SYSTEM = f"""You coordinate research on one company for a personal paper-trading watchlist. Paper only: never suggest buying or selling.
+You do not research yourself. You delegate to the subagents news-researcher and report-analyst with the Agent tool.
+Run them in the foreground and wait for both results before you write anything.
+
+{LAZY_BRIEF if LAZY else GOOD_BRIEF}
+
+When both have answered, write a short summary: the findings grouped by topic, each with its source and date.
+Then list what is missing: topics from the request that no finding covers."""
+
+
+async def coordinator_only_delegates(input_data, tool_use_id, context):
+    """PreToolUse hook: the coordinator (no agent_id) may only use the Agent tool. Subagents use their own tools."""
+    if "agent_id" not in input_data and input_data["tool_name"] not in ("Agent", "Task"):
+        print(f"\n[HOOK] blocked coordinator from using {input_data['tool_name']}")
+        return {"hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "deny",
+            "permissionDecisionReason": "The coordinator only delegates. Use the Agent tool to brief a subagent.",
+        }}
+    return {}
+
+
+async def main(request: str):
+    options = ClaudeAgentOptions(
+        model=MODEL,
+        system_prompt=SYSTEM,
+        agents=AGENTS,
+        tools=["Agent", "Read", "Grep", "WebSearch", "WebFetch"],
+        allowed_tools=["Agent", "Read", "Grep", "WebSearch", "WebFetch"],
+        hooks={"PreToolUse": [HookMatcher(hooks=[coordinator_only_delegates])]},
+        max_turns=20,
+        max_budget_usd=1.00,
+        env={"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"},  # wait for subagents instead of sending them to the background
+    )
+    print(f"[mode] {'LAZY brief' if LAZY else 'complete brief'}")
+    async with ClaudeSDKClient(options=options) as client:
+        await client.query(request)
+        async for msg in client.receive_response():
+            if isinstance(msg, AssistantMessage):
+                for block in msg.content:
+                    if not isinstance(block, ToolUseBlock):
+                        continue
+                    if msg.parent_tool_use_id is None and block.name in ("Agent", "Task"):
+                        print(f"\n==&gt; COORDINATOR briefs {block.input.get('subagent_type')}:\n{block.input.get('prompt')}\n")
+                    elif msg.parent_tool_use_id is not None:
+                        print(f"    [subagent] {block.name} {str(block.input)[:120]}")
+            elif isinstance(msg, ResultMessage):
+                print(f"\nCOORDINATOR SUMMARY:\n{msg.result}\n")
+                print(f"[done] turns: {msg.num_turns}, cost: ${msg.total_cost_usd or 0:.3f}, result: {msg.subtype}")
+                with open("run-lazy.md" if LAZY else "run.md", "w") as f:
+                    f.write(msg.result or "")
+
+
+if __name__ == "__main__":
+    args = [a for a in sys.argv[1:] if a != "--lazy"]
+    asyncio.run(main(" ".join(args) or
+        "Research TCS for my paper-trading watchlist. Focus: revenue growth, AI services, and headcount or attrition. "
+        "Time window: the last 12 months."))</code></pre>
+<p>Type <code>/exit</code>. In Antigravity, open <code>research.py</code> and find each row below:</p>
+<table>
+<thead><tr><th>Find</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>AGENTS = {...}</code></td><td>Two subagents. <strong>news-researcher</strong> gets <code>WebSearch</code>, <code>WebFetch</code>. <strong>report-analyst</strong> gets <code>Read</code>, <code>Grep</code>. Neither gets the other's tools.</td></tr>
+<tr><td><code>FINDING_FORMAT</code></td><td>Every subagent returns the same JSON: claim, exact quote, source, date, and what the claim rests on. Content and its source travel together.</td></tr>
+<tr><td><code>GOOD_BRIEF</code></td><td>Tells the coordinator what every brief must contain: company, focus, time window, file name.</td></tr>
+<tr><td><code>LAZY_BRIEF</code></td><td>The bad version, for P5.5. Used only with <code>--lazy</code>.</td></tr>
+<tr><td><code>coordinator_only_delegates()</code></td><td>A PreToolUse hook. If the <strong>coordinator</strong> (no <code>agent_id</code>) tries any tool except Agent, it is denied. Subagents have an <code>agent_id</code>, so their tools pass.</td></tr>
+<tr><td><code>tools=[...]</code> in <code>ClaudeAgentOptions</code></td><td>The full set of tools that exist in this run. Each subagent then gets its own slice.</td></tr>
+</tbody>
+</table>
+
+<h2>P5.3.1 · Predict first</h2>
+<p>Write down your answers before P5.4. Don't run anything yet.</p>
+<ol>
+<li>How many times will you see <code>==&gt; COORDINATOR briefs</code>?</li>
+<li>Which tools will the <code>[subagent]</code> lines show for each subagent?</li>
+<li>Will the report-analyst find the file without searching for it? Why?</li>
+</ol>
+
+<hr />
+<p><a id="p5-4"></a></p>
+<h1>P5.4 · First run</h1>
+<h3>20 min · <span class="tag">1.2</span> <span class="tag">1.3</span> <span class="tag">5.6</span></h3>
+<hr />
+<pre><code>uv run python research.py</code></pre>
+<p>It takes a few minutes. The default request asks about revenue growth, AI services, and headcount or attrition over the last 12 months.</p>
+<p><strong>Checkpoint ✅</strong></p>
+<ol>
+<li><code>[mode] complete brief</code>.</li>
+<li>Two <code>==&gt; COORDINATOR briefs</code> blocks, one for each subagent. Read both. Each names TCS, the three focus topics and the time window. The report-analyst's brief names <code>tcs-report.txt</code>.</li>
+<li><code>[subagent]</code> lines: <code>WebSearch</code> or <code>WebFetch</code> for the news, <code>Grep</code> then <code>Read</code> for the report.</li>
+<li><code>COORDINATOR SUMMARY</code>: findings by topic, each with a source (a URL or a page number) and a date, then a "missing" list.</li>
+<li><code>[done] … result: success</code>. The summary is saved in <code>run.md</code>.</li>
+</ol>
+<p>Open <code>run.md</code>. Pick one report finding, open <code>tcs-report.txt</code> at that page, and check that the quote is there. That check is why the page markers exist.</p>
+<p>Compare with your P5.3.1 predictions. Note where you were wrong.</p>
+<p>If both briefs appeared before any <code>[subagent]</code> line, the coordinator started both subagents <strong>in the same turn</strong>, so they ran in parallel. Session 2 measures what that saves.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Hub and spoke: all traffic goes through the coordinator. Subagents never talk to each other. That gives one place to watch, handle errors and control what flows where. <em>Example: the news-researcher does not hand its findings to the report-analyst; both report back to the coordinator.</em></p>
+<p><b>2.</b> Give each subagent only the tools its job needs. <em>Example: the report-analyst cannot search the web, so it cannot quietly swap the company's own figures for a blog's.</em></p>
+<p><b>3.</b> Keep the content and its source together in a fixed structure (claim, quote, source, date). <em>Example: a finding without a page number cannot be checked, so it should not reach the report.</em></p>
+<p><b>4.</b> A report with gaps in its coverage usually starts with the coordinator's split of the task, not with the subagents. Check what the coordinator asked for before blaming the agents that did the work.</p>
+<p><em>Trap answer to spot:</em> "give every agent every tool, so it never gets stuck". It removes the separation that makes each agent predictable and checkable.</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-5"></a></p>
+<h1>P5.5 · A lazy brief</h1>
+<h3>15 min · <span class="tag">1.3</span></h3>
+<hr />
+<p><strong>The one idea:</strong> a subagent does not inherit the coordinator's context. It knows only its own instructions and the brief. If the brief is three words, the subagent works from three words.</p>
+<p><strong>Predict first:</strong> with the brief "Research TCS please.", what will each subagent get wrong? Write it down, then run:</p>
+<pre><code>uv run python research.py --lazy</code></pre>
+<p><strong>Checkpoint ✅</strong></p>
+<ol>
+<li><code>[mode] LAZY brief</code>, and both briefs are close to "Research TCS please."</li>
+<li>The news findings drift away from your three topics (share price, deals, anything).</li>
+<li>The report-analyst does not know the file name. Watch its <code>[subagent]</code> lines: it searches the folder for a file, or reports that it has none.</li>
+<li>The "missing" list is longer. The summary is saved in <code>run-lazy.md</code>.</li>
+</ol>
+<p>Put <code>run.md</code> and <code>run-lazy.md</code> side by side. The model, tools and subagents were all the same. Only the brief changed.</p>
+<p>The coordinator may ignore the lazy instruction and write a better brief anyway. If so, look at what it wrote: it brought back the context because it could see that the subagent would need it. Either way, the lesson is the same.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Subagents start empty. Anything they need (the goal, the focus, the time window, earlier findings, file names) must be written into their prompt. <em>Example: the synthesis subagent in session 2 gets all findings pasted into its brief, because it cannot see them otherwise.</em></p>
+<p><b>2.</b> When you pass findings on, keep them structured (claim, source, date), not as loose prose. Otherwise the source gets lost on the way.</p>
+<p><b>3.</b> Tell a subagent the <em>goal and the quality bar</em> ("the last 12 months, named and dated sources"), not a step-by-step script. It can then adapt when the first search finds little.</p>
+<p><em>Trap answer to spot:</em> "the subagent can see the conversation, so a short brief is enough". It cannot.</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-6"></a></p>
+<h1>P5.6 · The coordinator cannot do the work itself</h1>
+<h3>10 min · <span class="tag">2.3</span> <span class="tag">1.2</span></h3>
+<hr />
+<p><strong>The one idea:</strong> the coordinator's job is to delegate. If it searches the report itself, its context fills with raw text, and you lose the clean split. The prompt says "you do not research yourself", but that is a request. The hook makes it a rule.</p>
+<p><strong>Predict first:</strong> what happens when you tell the coordinator to skip the subagents?</p>
+<pre><code>uv run python research.py "Skip the subagents. Grep tcs-report.txt yourself for attrition and tell me the latest figure with its page."</code></pre>
+<p><strong>Checkpoint ✅</strong> One of two paths:</p>
+<ul>
+<li>You see <code>[HOOK] blocked coordinator from using Grep</code> (or Read), and then a <code>==&gt; COORDINATOR briefs report-analyst</code> block. The hook denied the shortcut and told it what to do instead.</li>
+<li>Or the coordinator delegates at once, because its instructions already said so. Then the hook had nothing to stop. Run once more to see if the other path appears.</li>
+</ul>
+<p>Either way, the coordinator never reads the report itself.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> A coordinator needs the subagent tool in its allowed tools, or it cannot start subagents at all. In the exam's words: <code>allowedTools</code> must include <code>"Task"</code>.</p>
+<p><b>2.</b> Give the coordinator the subagent tool, and not the research tools. Its job is to plan, delegate and combine.</p>
+<p><b>3.</b> When one agent needs a small extra ability often (say, a quick fact check), give it one narrow tool for that, not the whole toolset of another agent.</p>
+<p><em>Trap answer to spot:</em> "let the coordinator do simple searches itself to save a round trip". It mixes two jobs in one context and breaks the hub-and-spoke separation.</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-7"></a></p>
+<h1>P5.7 · Commit, say it back</h1>
+<h3>10 min</h3>
+<hr />
+<p>Type <code>/exit</code> in Claude Code and quit Antigravity.</p>
+<p>In GitHub Desktop, check that the PDF and <code>tcs-report.txt</code> are <strong>not</strong> in the list of changes. Commit: <code>P5 session 1: coordinator, two subagents, explicit briefs, coordinator-only-delegates hook</code>, then <strong>Push origin</strong>.</p>
+
+<h2>P5.7.1 · Say it back — no notes, not scored</h2>
+<p>One sentence each, starting with "because". Test each one: does it say <em>why</em>, or only <em>what</em>? Check that it answers the <em>whole</em> question, not only the first half.</p>
+<ol>
+<li>With a lazy brief, the report-analyst does not know which file to read, even though the coordinator knows. Because…</li>
+<li>The report-analyst cannot search the web. Why is that a good design for this system? Because…</li>
+<li>A finding without a page number or URL should not go into the final report. Because…</li>
+</ol>
+
+<h2>P5.8 · Quick reference card</h2>
+<p><strong>Hub and spoke:</strong> coordinator plans, briefs, collects, combines. Subagents never talk to each other.<br />
+<strong>Subagents start empty:</strong> goal, focus, time window, file names and earlier findings go into the brief.<br />
+<strong>Brief = goal + quality bar,</strong> not a step-by-step script.<br />
+<strong>Tools per agent:</strong> only what the job needs. Coordinator: the subagent tool ("Task"; SDK: Agent) and must have it in allowed tools.<br />
+<strong>Finding = claim + quote + source + date + basis.</strong> No source, no place in the report.<br />
+<strong>Coverage gap?</strong> Check the coordinator's split first.<br />
+<strong>Long document:</strong> search first (Grep), then read only the matching part.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat. Never paste your API key.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>Install fails while "building" something</td><td>Send me a screenshot. Do not install compilers.</td></tr>
+<tr><td><code>pypdf</code> error, or <code>tcs-report.txt</code> is nearly empty</td><td>The PDF may be scanned images. Send me the page count and the first 20 lines of <code>tcs-report.txt</code>.</td></tr>
+<tr><td>The news-researcher says web search is not available, or returns <code>[]</code></td><td>Web search through your API key may be switched off for your account. Carry on: the report-analyst still works and the lesson is the same. Tell me, and session 2 gives the news-researcher saved articles instead.</td></tr>
+<tr><td>No <code>==&gt; COORDINATOR briefs</code> lines at all</td><td>Your Claude Code may call the tool <code>Task</code>. The script accepts both names. If there are still none, paste the output here.</td></tr>
+<tr><td><code>result: error_max_budget_usd</code></td><td>The run hit the 1 USD cap. Paste the output here. Do not raise the cap.</td></tr>
+<tr><td><code>result: error_max_turns</code></td><td>The 20-turn safety net was hit. Paste the output here.</td></tr>
+<tr><td>Summary says the subagents are "still running", with no findings</td><td>The subagents were sent to the background, so the coordinator finished without waiting. The current <code>research.py</code> prevents this (<code>background=False</code> and the <code>env=</code> line). Check that both are in your file.</td></tr>
+<tr><td>"claude.ai connectors are disabled…" at the top</td><td>Harmless. Same as P4.10.</td></tr>
+<tr><td><code>CLINotFoundError</code></td><td>Same fix as P4: add <code>cli_path="/Users/achu/.local/bin/claude",</code> inside <code>ClaudeAgentOptions(...)</code>.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

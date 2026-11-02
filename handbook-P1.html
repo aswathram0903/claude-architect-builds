@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P1 — Session 1 · P1.0–P1.7</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p1-0">P1.0</span><span data-t="p1-1">P1.1</span><span data-t="p1-2">P1.2</span><span data-t="p1-3">P1.3</span><span data-t="p1-4">P1.4</span><span data-t="p1-5">P1.5</span><span data-t="p1-6">P1.6</span><span data-t="p1-7">P1.7</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P1</div>
+
+<p><a id="top"></a></p>
+<h1>P1 · Session 1 — Claude Code for a team</h1>
+<h3>Fri 23 Oct 2026 · 90 min · Scenario 2: Code Generation with Claude Code</h3>
+
+<p><strong>How to use this page:</strong> keep it open next to your Terminal. Every prompt and every file has a <strong>COPY</strong> button. Do not type them again by hand. Work top to bottom.</p>
+
+<blockquote>
+<p><strong>The project in one minute.</strong> You are the tech lead of a small team. The team uses Claude Code every day. Today you make Claude Code behave the same way for every developer who clones the repository, and still let each person keep personal preferences. That is exam Scenario 2.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>3.1</strong> CLAUDE.md hierarchy, scoping, @import, /memory</td><td>D3 · 20%</td><td>P1.3</td></tr>
+<tr><td><strong>3.3</strong> Path-specific rules in <code>.claude/rules/</code></td><td>D3 · 20%</td><td>P1.4</td></tr>
+<tr><td><strong>3.2</strong> Slash commands and skills</td><td>D3 · 20%</td><td>P1.5, P1.6</td></tr>
+</tbody>
+</table>
+<p>Session 2 covers MCP configuration (2.4), plan mode (3.4), iterative refinement (3.5) and session resume (1.7), then the Section 9 check.</p>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>5 min</td><td>P1.0 · Before you start</td></tr>
+<tr><td>5 min</td><td>P1.1 · The three ideas in plain words</td></tr>
+<tr><td>10 min</td><td>P1.2 · Make the practice codebase</td></tr>
+<tr><td>20 min</td><td>P1.3 · CLAUDE.md at three levels</td></tr>
+<tr><td>15 min</td><td>P1.4 · Path-specific rules</td></tr>
+<tr><td>15 min</td><td>P1.5 · A team slash command</td></tr>
+<tr><td>15 min</td><td>P1.6 · A skill that runs in a fork</td></tr>
+<tr><td>5 min</td><td>P1.7 · Commit, push, close</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Product facts move.</strong> File names and frontmatter keys on this page match the exam guide and Claude Code as of mid-2026. If a step does not behave as described, check the live Claude Code docs (docs.claude.com → Claude Code) before you change anything. For the exam, use the guide's terms.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-0"></a></p>
+<h1>P1.0 · Before you start</h1>
+<h3>5 min</h3>
+<hr />
+<p><strong>The one idea:</strong> the repository must be on GitHub and open in a Terminal before Claude Code starts.</p>
+
+<h2>P1.0.1 · Publish the repository</h2>
+<ol>
+<li>In GitHub Desktop, click <strong>Publish repository</strong>.</li>
+<li>Keep the name <code>claude-architect-builds</code>.</li>
+<li>Clear <strong>Keep this code private</strong> if you want it as a public portfolio. Keep it set if not. You can change this later.</li>
+<li>Click <strong>Publish repository</strong>.</li>
+</ol>
+
+<h2>P1.0.2 · Open a Terminal in the repository</h2>
+<ol>
+<li>In GitHub Desktop, open the <strong>Repository</strong> menu.</li>
+<li>Click <strong>Open in Terminal</strong>.</li>
+<li>In the Terminal, make the project folder and start Claude Code:</li>
+</ol>
+<pre><code>mkdir -p p1-team-setup &amp;&amp; cd p1-team-setup &amp;&amp; claude</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude Code shows its prompt, and the path at the top ends in <code>claude-architect-builds/p1-team-setup</code>.</p>
+
+<blockquote>
+<p><strong>Why a sub-folder.</strong> The repository holds all six projects. P1 lives in <code>p1-team-setup/</code>. Claude Code treats the folder where you start it as the project root.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-1"></a></p>
+<h1>P1.1 · The three ideas in plain words</h1>
+<h3>5 min · read only</h3>
+<hr />
+<table>
+<thead><tr><th>Idea</th><th>In one sentence</th><th>What the exam tests</th></tr></thead>
+<tbody>
+<tr><td><strong>CLAUDE.md</strong></td><td>A text file of standing instructions that Claude Code reads automatically. It can exist at three levels: you (user), the repository (project), and one folder (directory).</td><td>Which level to use. Team rules go in the repository. Personal rules go in your home folder, which git does not share.</td></tr>
+<tr><td><strong>Rules</strong></td><td>Small instruction files in <code>.claude/rules/</code>. Each one says which files it applies to, with a pattern such as <code>tests/**/*.py</code>.</td><td>When a rule must follow a file <em>type</em> across many folders, a rule with a pattern beats a CLAUDE.md in one folder.</td></tr>
+<tr><td><strong>Commands and skills</strong></td><td>A command is a saved prompt you start with <code>/name</code>. A skill is a packaged task that Claude can also start by itself, and it can run in a separate context.</td><td>Where the file goes so the whole team gets it, and when to isolate a task with <code>context: fork</code>.</td></tr>
+</tbody>
+</table>
+<p>Three terms used below:</p>
+<ul>
+<li><strong>Frontmatter</strong>: settings at the top of a file, between two lines of <code>---</code>.</li>
+<li><strong>Glob</strong>: a file pattern. <code>*</code> means any name. <code>**</code> means any folder, at any depth.</li>
+<li><strong>Context</strong>: everything Claude can see in the current conversation. It has a size limit, so what goes in it matters.</li>
+</ul>
+
+<hr />
+<p><a id="p1-2"></a></p>
+<h1>P1.2 · Make the practice codebase</h1>
+<h3>10 min</h3>
+<hr />
+<p><strong>The one idea:</strong> you need a small, real-looking codebase to configure. Claude Code writes it. You do not need to read the code.</p>
+<p>Paste this into Claude Code:</p>
+<blockquote>
+<p>Create a small Python project in this folder for a fictional order-tracking service.<br />
+Structure:<br />
+- src/orders/ with models.py (Order dataclass), service.py (create, cancel, list orders, kept in memory), and api.py (three plain functions that call the service)<br />
+- tests/ with test_service.py and test_api.py, using pytest, 3 to 5 tests each<br />
+- docs/conventions.md with 5 short team coding conventions (naming, type hints, docstrings, error handling, test naming)<br />
+- a README.md of 10 lines or fewer<br />
+Keep every file short. Do not create a CLAUDE.md or anything under .claude/ yet. I will ask you to create them in later steps, and when I do, create them without asking again.<br />
+When done, list the files you created.</p>
+</blockquote>
+<p>Claude Code asks for permission before it writes files. Approve each request.</p>
+<p><strong>Checkpoint ✅</strong> Claude lists <code>src/orders/</code>, <code>tests/</code>, <code>docs/conventions.md</code> and <code>README.md</code>. There is no CLAUDE.md yet.</p>
+
+<hr />
+<p><a id="p1-3"></a></p>
+<h1>P1.3 · CLAUDE.md at three levels</h1>
+<h3>20 min · <span class="tag">3.1</span></h3>
+<hr />
+<p><strong>The one idea:</strong> each level answers a different question. <em>Who am I?</em> (user) · <em>How does this team work?</em> (project) · <em>What is special about this folder?</em> (directory).</p>
+<p><strong>By the end you can:</strong> say which level a rule belongs to, use <code>@import</code> to pull in another file, and prove with <code>/memory</code> which files are loaded.</p>
+
+<table>
+<thead><tr><th>Level</th><th>File location</th><th>Shared with the team?</th></tr></thead>
+<tbody>
+<tr><td>User</td><td><code>~/.claude/CLAUDE.md</code></td><td>No. It is in your home folder, not in git.</td></tr>
+<tr><td>Project</td><td><code>./CLAUDE.md</code> at the repository root</td><td>Yes. Everyone who clones gets it.</td></tr>
+<tr><td>Directory</td><td><code>./tests/CLAUDE.md</code> (any sub-folder)</td><td>Yes. Loaded when Claude works with files in that folder.</td></tr>
+</tbody>
+</table>
+
+<h2>P1.3.1 · The project level, with an import</h2>
+<p>Copy the whole box below — instruction and file together — and paste it into Claude Code as one message.</p>
+<pre><code>Create CLAUDE.md in this folder with exactly this content, and nothing else:
+
+# Order service — team instructions
+
+## Project
+Small Python order-tracking service. Source in src/orders/, tests in tests/.
+
+## Team standards
+- Python 3.13. Type hints on every function.
+- Run tests with: pytest -q
+- Never add a new dependency without asking first.
+
+## Conventions
+@docs/conventions.md</code></pre>
+<blockquote>
+<p><strong>What <code>@docs/conventions.md</code> does.</strong> It imports that file into CLAUDE.md. The conventions stay in one file that people can also read on their own. CLAUDE.md stays short.</p>
+</blockquote>
+
+<h2>P1.3.2 · The directory level</h2>
+<p>Copy the whole box below — instruction and file together — and paste it into Claude Code as one message.</p>
+<pre><code>Create tests/CLAUDE.md with exactly this content:
+
+# Tests folder
+- One assert per test where possible.
+- Use pytest fixtures for any Order you build more than once.</code></pre>
+
+<h2>P1.3.3 · The user level</h2>
+<p>This file is outside the repository. In the Terminal, Claude Code asks before it writes outside the project folder. Approve it.</p>
+<blockquote>
+<p>Append these two lines to ~/.claude/CLAUDE.md (create the file if it does not exist). Do not change anything else in it:<br />
+- Explain every change in 2 sentences or fewer.<br />
+- I am preparing for the Claude Architect exam; when relevant, name the Claude Code feature you are using.</p>
+</blockquote>
+
+<h2>P1.3.4 · Prove what is loaded</h2>
+<ol>
+<li>Type <code>/memory</code> and press Return.</li>
+<li>Read the list. It shows the memory files Claude Code found. Press Escape to close it.</li>
+<li>Type <code>/exit</code>, then start Claude Code again with <code>claude</code>. CLAUDE.md files load when a session starts.</li>
+<li>Paste this:</li>
+</ol>
+<blockquote>
+<p>I am about to ask you to edit tests/test_service.py.<br />
+Before you do anything, list every instruction that applies to that edit.<br />
+For each one, name the exact file it came from (user, project, imported, or directory).<br />
+Do not edit anything.</p>
+</blockquote>
+<p><strong>Checkpoint ✅</strong> Claude names instructions from all four sources: <code>~/.claude/CLAUDE.md</code>, <code>./CLAUDE.md</code>, <code>docs/conventions.md</code> (through the import) and <code>tests/CLAUDE.md</code>.</p>
+
+<blockquote>
+<p><strong>The exam lens.</strong> A new team member says Claude ignores a team rule that works for everyone else. First suspect: the rule is in someone's <em>user</em> file, not the project file. User-level files are never shared through git.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-4"></a></p>
+<h1>P1.4 · Path-specific rules</h1>
+<h3>15 min · <span class="tag">3.3</span></h3>
+<hr />
+<p><strong>The one idea:</strong> a directory CLAUDE.md follows a <em>folder</em>. A rule with a glob follows a <em>file pattern</em>, in any folder.</p>
+<p><strong>By the end you can:</strong> write a rule that applies only to matching files, and explain why it beats a directory CLAUDE.md when the files are spread out.</p>
+
+<h2>P1.4.1 · Make the files spread out</h2>
+<blockquote>
+<p>Create src/orders/test_models_inline.py with one small pytest test for the Order dataclass.<br />
+This is deliberate: a test file outside the tests/ folder.</p>
+</blockquote>
+
+<h2>P1.4.2 · Write the rule</h2>
+<p>Copy the whole box below — instruction and file together — and paste it into Claude Code as one message.</p>
+<pre><code>Create .claude/rules/testing.md with exactly this content:
+
+---
+paths:
+  - "**/test_*.py"
+---
+# Testing rule
+- Every test name starts with test_ and describes the behaviour, e.g. test_cancel_rejects_shipped_order.
+- Never call a real network or file system in a test.</code></pre>
+
+<h2>P1.4.3 · Test it</h2>
+<p>Type <code>/exit</code>, start <code>claude</code> again, and paste:</p>
+<blockquote>
+<p>List the instructions that apply when you edit src/orders/test_models_inline.py, and the file each comes from.<br />
+Then do the same for src/orders/service.py.<br />
+Do not edit anything.</p>
+</blockquote>
+<p><strong>Checkpoint ✅</strong> The testing rule applies to <code>test_models_inline.py</code>. It does <em>not</em> apply to <code>service.py</code>. <code>tests/CLAUDE.md</code> does not apply to either, because neither file is in <code>tests/</code>.</p>
+
+<blockquote>
+<p><strong>The exam lens.</strong> Test files sit next to the code in many folders, and the team wants one testing standard. Answer: a <code>.claude/rules/</code> file with a glob. Not a CLAUDE.md in every folder, and not one long root CLAUDE.md that loads for every file.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-5"></a></p>
+<h1>P1.5 · A team slash command</h1>
+<h3>15 min · <span class="tag">3.2</span></h3>
+<hr />
+<p><strong>The one idea:</strong> the folder decides who gets the command. <code>.claude/commands/</code> in the repository is for the team. <code>~/.claude/commands/</code> is only for you.</p>
+
+<h2>P1.5.1 · The team command</h2>
+<p>Copy the whole box below — instruction and file together — and paste it into Claude Code as one message.</p>
+<pre><code>Create .claude/commands/review.md with exactly this content:
+
+---
+description: Review one file against the team checklist
+argument-hint: [file path]
+allowed-tools: Read, Grep
+---
+Review $ARGUMENTS against this checklist. Report only real problems.
+
+1. Every function has type hints.
+2. Errors are raised with a clear message, never silently ignored.
+3. Names follow docs/conventions.md.
+
+For each problem give: line number, rule number, one-sentence fix.
+If there are no problems, say "No issues found".</code></pre>
+<p>Three terms in that file:</p>
+<ul>
+<li><code>$ARGUMENTS</code>: whatever you type after the command name.</li>
+<li><code>argument-hint</code>: the hint Claude Code shows while you type the command.</li>
+<li><code>allowed-tools</code>: the only tools the command may use without asking. Here Claude can read but cannot edit.</li>
+</ul>
+
+<h2>P1.5.2 · Run it</h2>
+<ol>
+<li>Type <code>/exit</code> and start <code>claude</code> again.</li>
+<li>Type <code>/rev</code> and look at the suggestion list. Your command shows with its description and hint.</li>
+<li>Run:</li>
+</ol>
+<pre><code>/review src/orders/service.py</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude returns a short list, or "No issues found", and edits nothing.</p>
+
+<h2>P1.5.3 · The personal version</h2>
+<blockquote>
+<p>Create ~/.claude/commands/explain.md (outside this repository) with this content:<br />
+---<br />
+description: Explain a file in 5 bullets for exam study<br />
+---<br />
+Explain $ARGUMENTS in 5 bullets. Name any Claude Code feature involved.</p>
+</blockquote>
+<p><strong>Checkpoint ✅</strong> <code>/explain</code> works in this session. Run <code>git status</code> in a second Terminal tab: <code>.claude/commands/review.md</code> shows as new, <code>explain.md</code> does not. Only the team command travels with the repository.</p>
+
+<blockquote>
+<p><strong>The exam lens.</strong> "Every developer gets it when they clone or pull" means <code>.claude/commands/</code> in the repository. A home-folder location, a CLAUDE.md section or an invented config file are the distractors.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-6"></a></p>
+<h1>P1.6 · A skill that runs in a fork</h1>
+<h3>15 min · <span class="tag">3.2</span></h3>
+<hr />
+<p><strong>The one idea:</strong> some tasks read a lot of files but only need to return a short answer. <code>context: fork</code> runs the skill in a separate context. Only the result comes back, so your main conversation stays clean.</p>
+<p><strong>By the end you can:</strong> say when to use <code>context: fork</code> and how <code>allowed-tools</code> limits a skill.</p>
+
+<h2>P1.6.1 · Write the skill</h2>
+<p>Copy the whole box below — instruction and file together — and paste it into Claude Code as one message.</p>
+<pre><code>Create .claude/skills/codebase-map/SKILL.md with exactly this content:
+
+---
+name: codebase-map
+description: Map an unfamiliar Python codebase. Use when the user asks what a codebase contains, where something lives, or how modules connect.
+context: fork
+allowed-tools: Read, Grep, Glob
+---
+Explore the codebase in the current folder.
+
+Return ONLY this, under 15 lines:
+- Modules: one line each, what it does
+- Entry points: functions a caller would use first
+- Tests: which modules have tests, which do not
+- One risk you noticed, with the file name
+
+Do not edit any file.</code></pre>
+<p>Two points about this file:</p>
+<ul>
+<li>The <code>description</code> tells Claude <em>when</em> to use the skill. Claude can start it by itself when a request matches. A command never starts by itself.</li>
+<li><code>allowed-tools</code> lists only read-only tools. The skill cannot change code.</li>
+</ul>
+
+<h2>P1.6.2 · Run it two ways</h2>
+<ol>
+<li>Type <code>/exit</code> and start <code>claude</code> again.</li>
+<li>Run it by name: type <code>/codebase-map</code>.</li>
+<li>Run it by description. In a fresh session, paste:</li>
+</ol>
+<blockquote>
+<p>I'm new here. What does this codebase contain and where are the gaps in testing?</p>
+</blockquote>
+<p><strong>Checkpoint ✅</strong> Both runs return a short map of 15 lines or fewer. The second run starts the skill without you naming it. The trace shows a separate task, and the many file reads stay out of your main conversation.</p>
+
+<blockquote>
+<p><strong>The exam lens.</strong> Verbose exploration filling the main context points to <code>context: fork</code> (or a subagent). A routine team prompt that a developer runs on purpose points to a command.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-7"></a></p>
+<h1>P1.7 · Commit, push, close</h1>
+<h3>5 min</h3>
+<hr />
+<ol>
+<li>Type <code>/exit</code>.</li>
+<li>In GitHub Desktop, check the changed files. You see <code>p1-team-setup/</code> with <code>CLAUDE.md</code>, <code>.claude/rules/</code>, <code>.claude/commands/</code>, <code>.claude/skills/</code>, <code>src/</code>, <code>tests/</code> and <code>docs/</code>.</li>
+<li>Write the summary <code>P1 session 1: CLAUDE.md hierarchy, rules, command, skill</code>.</li>
+<li>Click <strong>Commit to main</strong>, then <strong>Push origin</strong>.</li>
+</ol>
+<p><strong>Checkpoint ✅</strong> The files are on github.com. Your user-level files (<code>~/.claude/CLAUDE.md</code>, <code>~/.claude/commands/explain.md</code>) are <em>not</em> there. That is correct.</p>
+
+<h2>P1.7.1 · Say it back — 3 minutes, no notes</h2>
+<p>Answer each one in one sentence, out loud or on paper. These are not scored.</p>
+<ol>
+<li>A rule works for you but not for a new colleague. Where is it, most likely?</li>
+<li>Test files live in six folders. Where does the testing standard go?</li>
+<li>When does a skill need <code>context: fork</code>?</li>
+</ol>
+<p>Send your three sentences to the coach with the word <strong>done</strong>.</p>
+
+<h2>P1.8 · Quick reference card</h2>
+<p><strong>User CLAUDE.md:</strong> <code>~/.claude/CLAUDE.md</code>, only for you, never in git.<br />
+<strong>Project CLAUDE.md:</strong> repository root, for the whole team.<br />
+<strong>Directory CLAUDE.md:</strong> one folder, loaded when Claude works there.<br />
+<strong>@import:</strong> <code>@path/file.md</code> pulls a file into CLAUDE.md.<br />
+<strong>/memory:</strong> shows which memory files are loaded.<br />
+<strong>Rules:</strong> <code>.claude/rules/*.md</code> with a <code>paths:</code> glob. Follows a file type across folders.<br />
+<strong>Team command:</strong> <code>.claude/commands/</code>. <strong>Personal command:</strong> <code>~/.claude/commands/</code>.<br />
+<strong>Skill:</strong> <code>.claude/skills/&lt;name&gt;/SKILL.md</code>. Description decides when it starts by itself.<br />
+<strong>context: fork:</strong> heavy work in a separate context, short result back.<br />
+<strong>allowed-tools:</strong> limits what a command or skill may do.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat.</strong> Do not debug alone tonight.</p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>claude: command not found</code></td><td>Close and open the Terminal. If it still fails, run <code>~/.local/bin/claude</code>. Claude Code is installed there on your Mac.</td></tr>
+<tr><td>A new CLAUDE.md or rule seems ignored</td><td>Memory files load when a session starts. Type <code>/exit</code> and start <code>claude</code> again.</td></tr>
+<tr><td><code>/memory</code> does not show the directory CLAUDE.md</td><td>Expected. A directory file loads when Claude reads files in that folder. Ask about a file in <code>tests/</code>, then check again.</td></tr>
+<tr><td>The rule applies to every file</td><td>The frontmatter is wrong. Check the three dashes above and below, and that the glob is in quotes under <code>paths:</code>.</td></tr>
+<tr><td><code>/review</code> does not show in the list</td><td>The file is in the wrong folder. It must be <code>p1-team-setup/.claude/commands/review.md</code>. Restart Claude Code.</td></tr>
+<tr><td>The skill never starts by itself</td><td>The description is too vague, or the request does not match it. Run it by name first. The exam point: the description is how Claude decides.</td></tr>
+<tr><td>Claude asks permission for every file</td><td>Correct. Approve each one tonight. Watching the requests is part of learning what it does.</td></tr>
+<tr><td>Claude wrote to <code>~/.claude/</code> without asking</td><td>Check your permission mode with <code>/permissions</code>. Keep the default for this project.</td></tr>
+<tr><td>A frontmatter key is rejected</td><td>The product changed after the exam guide. Check the live docs, use the current key in the file, and keep the guide's term for the exam.</td></tr>
+</tbody>
+</table>
+
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

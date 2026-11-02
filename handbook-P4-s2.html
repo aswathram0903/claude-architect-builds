@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P4 — Support Agent (2)</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p4-9">P4.9</span><span data-t="p4-10">P4.10</span><span data-t="p4-11">P4.11</span><span data-t="p4-12">P4.12</span><span data-t="p4-13">P4.13</span><span data-t="p4-14">P4.14</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P4</div>
+
+<p><a id="top"></a></p>
+<h1>P4 · Session 2 — Hooks, escalation, handoff</h1>
+<h3>Sun 25 Oct 2026 · 90 min · Scenario 1: Customer Support Resolution Agent</h3>
+
+<p><strong>How to use this page:</strong> one grey box = one complete message or command. Click <strong>COPY</strong>, paste, press Return.</p>
+
+<blockquote>
+<p><strong>Where you are.</strong> In session 1 you wrote the loop yourself. Now you move the same agent onto the <strong>Claude Agent SDK</strong>, which runs the loop for you. That is the setup exam Scenario 1 describes. Then you add three things: a <strong>hook</strong> that stops large refunds whatever Claude decides, written <strong>escalation rules</strong> with examples, and a <strong>handoff</strong> a person can act on without asking the customer again.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>1.5</strong> Agent SDK hooks: block or redirect a tool call; act after a tool returns</td><td>D1 · 27%</td><td>P4.11, P4.13</td></tr>
+<tr><td><strong>5.2</strong> Escalation: explicit criteria, honour "I want a human", policy gaps</td><td>D5 · 15%</td><td>P4.12</td></tr>
+<tr><td><strong>1.4</strong> Structured handoff to a person</td><td>D1 · 27%</td><td>P4.11, P4.12</td></tr>
+<tr><td><strong>2.4</strong> MCP tools inside an agent</td><td>D2 · 18%</td><td>P4.10</td></tr>
+</tbody>
+</table>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>10 min</td><td>P4.9 · Set up</td></tr>
+<tr><td>20 min</td><td>P4.10 · Same agent, the SDK runs the loop</td></tr>
+<tr><td>20 min</td><td>P4.11 · A hook that blocks big refunds</td></tr>
+<tr><td>20 min</td><td>P4.12 · When to hand over to a person</td></tr>
+<tr><td>5 min</td><td>P4.13 · The audit trail</td></tr>
+<tr><td>15 min</td><td>P4.14 · Commit, say it back</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Product facts move.</strong> This guide was checked against <code>claude-agent-sdk</code> 0.2.x for Python. If a name is refused, check docs.claude.com → Agent SDK. The SDK starts Claude Code in the background, so it bills your API key like your other Python code. About 15 runs, well under 1 USD.</p>
+</blockquote>
+
+<hr />
+<p><a id="p4-9"></a></p>
+<h1>P4.9 · Set up</h1>
+<h3>10 min</h3>
+<hr />
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds/p4-support-agent &amp;&amp; uv add claude-agent-sdk "cryptography&lt;49"</code></pre>
+<p><code>"cryptography&lt;49"</code> matters on your Intel Mac: the SDK needs the <code>cryptography</code> library, and versions 49 and newer have no ready-made Intel Mac build, so uv would try to compile it and fail.</p>
+<p><strong>Checkpoint ✅</strong> "Installed … packages", with <code>claude-agent-sdk</code> in the list. You reuse <code>backend.py</code> from session 1, unchanged.</p>
+<p>If the install fails while "building" something, stop and send me a screenshot.</p>
+
+<hr />
+<p><a id="p4-10"></a></p>
+<h1>P4.10 · Same agent, the SDK runs the loop</h1>
+<h3>20 min · <span class="tag">2.4</span></h3>
+<hr />
+<p><strong>The one idea:</strong> the loop you wrote by hand (call Claude, run the tool, send the result back, check <code>stop_reason</code>) is exactly what the Agent SDK does for you. You give it the tools, the rules and the hooks. It runs the loop.</p>
+<p>Three terms:</p>
+<ul>
+<li><strong>Agent SDK</strong>: a library that runs the agentic loop for you, with the same machinery as Claude Code.</li>
+<li><strong>In-process MCP server</strong>: your tools, packaged as an MCP server that lives inside your own Python program. Their names get a prefix: <code>mcp__shop__get_customer</code>.</li>
+<li><strong><code>allowed_tools</code></strong>: the only tools this agent may use. Built-in tools such as Bash and file editing are switched off with <code>disallowed_tools</code>.</li>
+</ul>
+
+<h2>P4.10.1 · Create the SDK agent</h2>
+<p>Start <code>claude</code> and paste:</p>
+<pre><code>Create sdk_agent.py with exactly this content, and nothing else. Do not run it.
+
+"""P4 session 2: the support agent on the Claude Agent SDK, with hooks and escalation rules."""
+import asyncio
+import json
+import sys
+
+from claude_agent_sdk import (
+    AssistantMessage,
+    ClaudeAgentOptions,
+    ClaudeSDKClient,
+    HookMatcher,
+    ResultMessage,
+    TextBlock,
+    ToolUseBlock,
+    create_sdk_mcp_server,
+    tool,
+)
+
+import backend
+
+MODEL = "claude-haiku-5-5"  # check docs.claude.com for current model names
+REFUND_LIMIT = 500
+
+state = {"verified_customer_id": None, "looked_up": set()}
+
+SYSTEM = """You are a customer support agent for an online office-supply shop. Resolve requests with the tools. Be brief.
+
+Escalation rules:
+- Escalate at once, without trying to resolve, if the customer asks for a human.
+- Escalate if policy does not cover the request. Policy covers: refunds for delivered orders that arrived damaged, with a photo; order status questions.
+- Escalate if a tool tells you to, or if you cannot make progress after one retry.
+- Do NOT escalate a case the policy covers, even if the customer is upset or rude.
+
+Examples:
+- "My mug arrived cracked, photo attached, order A-1." -&gt; verify, look up, refund. No escalation.
+- "This is useless, get me a manager now." -&gt; escalate at once, reason "customer asked for a human".
+- "I changed my mind about the colour, refund please." -&gt; change of mind is not covered -&gt; escalate, reason "policy gap".
+
+When you escalate, fill every field of escalate_to_human so the human never has to ask the customer again."""
+
+
+def reply(result: dict) -&gt; dict:
+    """Wrap a backend result as an MCP tool result, marking failures as errors."""
+    return {"content": [{"type": "text", "text": json.dumps(result)}], "is_error": bool(result.get("isError"))}
+
+
+@tool("get_customer", "Find and verify a customer by email. Call this FIRST, before any order or refund action.", {"email": str})
+async def get_customer(args):
+    result = backend.get_customer(args["email"])
+    if not result.get("isError"):
+        state["verified_customer_id"] = result["customer_id"]
+    return reply(result)
+
+
+@tool("lookup_order", "Get one order's item, amount, status and whether a damage photo was received. Only for the verified customer's own orders.", {"order_id": str})
+async def lookup_order(args):
+    if not state["verified_customer_id"]:
+        return reply(backend.error("prerequisite", "Blocked: verify the customer with get_customer first.", False))
+    result = backend.lookup_order(args["order_id"], state["verified_customer_id"])
+    if not result.get("isError"):
+        state["looked_up"].add(args["order_id"])
+    return reply(result)
+
+
+@tool("process_refund", "Refund one delivered order of the verified customer, after lookup_order. Amount must not exceed the order amount.", {"order_id": str, "amount": float})
+async def process_refund(args):
+    if args["order_id"] not in state["looked_up"]:
+        return reply(backend.error("prerequisite", "Blocked: look up this order first.", False))
+    return reply(backend.process_refund(args["order_id"], args["amount"]))
+
+
+@tool(
+    "escalate_to_human",
+    "Hand the case to a human agent. Fill every field so the human can act without asking the customer again.",
+    {"customer_id": str, "order_id": str, "what_customer_wants": str, "what_was_checked": str, "reason": str, "recommended_action": str},
+)
+async def escalate_to_human(args):
+    print("\n--- HANDOFF TO HUMAN ---")
+    for key, value in args.items():
+        print(f"  {key}: {value}")
+    return reply(backend.escalate_to_human(args["what_customer_wants"], args["reason"]))
+
+
+async def refund_limit(input_data, tool_use_id, context):
+    """PreToolUse hook: runs in code before every refund, whatever Claude decided."""
+    amount = input_data["tool_input"].get("amount", 0)
+    if amount &gt; REFUND_LIMIT:
+        print(f"\n[HOOK PreToolUse] blocked a refund of {amount}: over the {REFUND_LIMIT} limit")
+        return {"hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "deny",
+            "permissionDecisionReason": f"Refunds over {REFUND_LIMIT} need a human. Do not retry. Call escalate_to_human with a full handoff.",
+        }}
+    return {}
+
+
+async def audit(input_data, tool_use_id, context):
+    """PostToolUse hook: runs after every tool and writes an audit line."""
+    line = {"tool": input_data.get("tool_name"), "input": input_data.get("tool_input"), "output": input_data.get("tool_response")}
+    with open("audit.jsonl", "a") as f:
+        f.write(json.dumps(line, default=str) + "\n")
+    return {}
+
+
+async def main(prompt: str) -&gt; None:
+    server = create_sdk_mcp_server(
+        name="shop", version="1.0.0", tools=[get_customer, lookup_order, process_refund, escalate_to_human]
+    )
+    options = ClaudeAgentOptions(
+        model=MODEL,
+        system_prompt=SYSTEM,
+        max_turns=12,
+        mcp_servers={"shop": server},
+        allowed_tools=[
+            "mcp__shop__get_customer",
+            "mcp__shop__lookup_order",
+            "mcp__shop__process_refund",
+            "mcp__shop__escalate_to_human",
+        ],
+        disallowed_tools=["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebFetch", "WebSearch"],
+        hooks={
+            "PreToolUse": [HookMatcher(matcher="mcp__shop__process_refund", hooks=[refund_limit])],
+            "PostToolUse": [HookMatcher(hooks=[audit])],
+        },
+    )
+    async with ClaudeSDKClient(options=options) as client:
+        await client.query(prompt)
+        async for message in client.receive_response():
+            if isinstance(message, AssistantMessage):
+                for block in message.content:
+                    if isinstance(block, TextBlock):
+                        print(f"\nAGENT: {block.text}")
+                    elif isinstance(block, ToolUseBlock):
+                        print(f"  -&gt; {block.name}({block.input})")
+            elif isinstance(message, ResultMessage):
+                print(f"\n[done] turns: {message.num_turns}, stop_reason: {message.stop_reason}, result: {message.subtype}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main(" ".join(sys.argv[1:]) or "Hi, I'm anna@example.com. Order A-5001, the lamp arrived broken, photo sent. Refund please."))</code></pre>
+<p>Type <code>/exit</code>. In Antigravity, compare <code>sdk_agent.py</code> with <code>agent.py</code>:</p>
+<table>
+<thead><tr><th>In <code>agent.py</code> (session 1)</th><th>In <code>sdk_agent.py</code> (now)</th></tr></thead>
+<tbody>
+<tr><td>Your own <code>for turn in range(...)</code> loop</td><td>Gone. <code>ClaudeSDKClient</code> runs it.</td></tr>
+<tr><td><code>TOOLS</code> list plus <code>run_tool()</code></td><td>Each tool is a function with <code>@tool(...)</code>, grouped by <code>create_sdk_mcp_server</code></td></tr>
+<tr><td><code>max_turns=10</code> in your loop</td><td><code>max_turns=12</code> in <code>ClaudeAgentOptions</code></td></tr>
+<tr><td>Gates inside <code>run_tool()</code></td><td>The same gates inside each tool function</td></tr>
+<tr><td>—</td><td><strong>New:</strong> <code>hooks</code> and escalation rules in <code>SYSTEM</code></td></tr>
+</tbody>
+</table>
+
+<h2>P4.10.2 · Run the easy refund</h2>
+<pre><code>uv run python sdk_agent.py</code></pre>
+<p><strong>Checkpoint ✅</strong> You see <code>-&gt; mcp__shop__get_customer(...)</code>, <code>lookup_order</code>, <code>process_refund</code>, then the agent confirms 49. The last line shows <code>stop_reason: end_turn</code>. That is the same signal your own loop used, now read by the SDK.</p>
+
+<hr />
+<p><a id="p4-11"></a></p>
+<h1>P4.11 · A hook that blocks big refunds</h1>
+<h3>20 min · <span class="tag">1.5</span> <span class="tag">1.4</span></h3>
+<hr />
+<p><strong>The one idea:</strong> a hook is your code, run by the SDK at a fixed moment, for example just before a tool runs. Claude cannot skip it or talk its way past it. Here, any refund over 500 is stopped, and Claude is told to hand the case to a person.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>PreToolUse hook</strong>: runs before a tool call. It can allow it, block it (<code>deny</code>), and tell Claude why and what to do instead.</li>
+<li><strong>PostToolUse hook</strong>: runs after a tool returns. It can log, check or add notes to the result.</li>
+</ul>
+<p>Find <code>refund_limit()</code> in <code>sdk_agent.py</code>, and the line in <code>ClaudeAgentOptions</code> that attaches it only to <code>mcp__shop__process_refund</code>.</p>
+
+<h2>P4.11.1 · Ask for the big refund</h2>
+<p>To test the hook alone, the case must pass every other rule: delivered, damaged, <em>with</em> a photo, and over 500. A-5002 has no photo, so Claude stops earlier to ask for one. Add one order that passes everything except the limit.</p>
+<p>In Antigravity, open <code>backend.py</code>. Under the <code>"A-5002"</code> line in <code>ORDERS</code>, add this line, then save:</p>
+<pre><code>    "A-5003": {"customer_id": "C-100", "item": "Standing desk", "amount": 820.0, "status": "delivered", "damage_photo": True},</code></pre>
+<pre><code>uv run python sdk_agent.py "Hi, I'm anna@example.com. The standing desk from order A-5003 arrived broken, I sent a photo. Refund the full 820 please."</code></pre>
+<p><strong>Checkpoint ✅</strong> Look for this order of events:</p>
+<ol>
+<li><code>get_customer</code> and <code>lookup_order</code> run normally.</li>
+<li>Claude tries <code>process_refund</code> with 820, and you see <code>[HOOK PreToolUse] blocked a refund of 820</code>.</li>
+<li>Claude does <strong>not</strong> retry. It calls <code>escalate_to_human</code>, and <code>--- HANDOFF TO HUMAN ---</code> prints all six fields.</li>
+</ol>
+<p>If you ran the A-5002 chair case first: Claude asked for a photo and stopped. That is correct. The missing photo is a fact it can still get from the customer, so it asks before it refunds or escalates. The hook never fired because Claude never tried the refund.</p>
+<p>Read the handoff. Could a person act on it without contacting Anna? That is the test of a good handoff.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> A business limit that must never be broken (refunds over a limit, deletes, payments) belongs in a hook or a gate, not only in the prompt.</p>
+<p><b>2.</b> A PreToolUse hook can do more than block: it tells Claude the reason and the next step ("call escalate_to_human"). That turns a dead end into a redirect.</p>
+<p><b>3.</b> A PostToolUse hook acts on a result: log it, check it, or clean it up (for example, one date format) before Claude reasons over it.</p>
+<p><b>4.</b> A handoff is a structured summary: who, what they want, what was checked, why it is escalated, what to do next. The person should never have to ask the customer again.</p>
+<p><em>Trap answer to spot:</em> "add 'never refund more than 500' to the system prompt". It works most of the time. A rule about money must work every time.</p>
+</blockquote>
+
+<hr />
+<p><a id="p4-12"></a></p>
+<h1>P4.12 · When to hand over to a person</h1>
+<h3>20 min · <span class="tag">5.2</span></h3>
+<hr />
+<p><strong>The one idea:</strong> escalate too often and nothing gets resolved. Escalate too rarely and the agent bluffs on cases it should not handle. Clear written rules and a few examples set the line. This is this morning's Question 3, built.</p>
+<p>Read <code>SYSTEM</code> in <code>sdk_agent.py</code>: four rules, then three examples. Then run three cases. Predict each outcome first: escalate or resolve?</p>
+
+<h2>P4.12.1 · The customer asks for a person</h2>
+<pre><code>uv run python sdk_agent.py "I'm omar@example.com. I don't want a bot. Put me through to a real person."</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude escalates <strong>at once</strong>, without trying to solve anything first. Reason: the customer asked.</p>
+
+<h2>P4.12.2 · Upset, but covered by policy</h2>
+<pre><code>uv run python sdk_agent.py "This is ridiculous!! I'm anna@example.com and my lamp from A-5001 arrived smashed. I sent a photo. Fix it NOW."</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude does <strong>not</strong> escalate. It refunds 49. Anger alone is not a reason, because policy covers the case.</p>
+
+<h2>P4.12.3 · Not covered by policy</h2>
+<pre><code>uv run python sdk_agent.py "Hi, I'm anna@example.com. The lamp from A-5001 is fine, I just don't like the colour. Can I get my money back?"</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude escalates with the reason "policy gap", and the handoff says what Anna wants and that the lamp is undamaged.</p>
+<p>Write down: did all three match your prediction?</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> The agent escalates the wrong cases: write explicit criteria for when to escalate and when not to, plus a few examples of borderline cases. Try this first, before anything bigger.</p>
+<p><b>2.</b> The customer asks for a person: escalate at once. Do not try to solve it first.</p>
+<p><b>3.</b> Policy does not cover the request: escalate, and say it is a policy gap. Do not invent a policy.</p>
+<p><b>4.</b> The agent cannot make progress (repeated failures): escalate with what was tried.</p>
+<p><em>Trap answers to spot:</em> "escalate when the customer sounds angry". Anger says nothing about how hard the case is. And "train a model on past tickets first": a bigger fix before the first fix.</p>
+</blockquote>
+
+<hr />
+<p><a id="p4-13"></a></p>
+<h1>P4.13 · The audit trail</h1>
+<h3>5 min · <span class="tag">1.5</span></h3>
+<hr />
+<p>The PostToolUse hook <code>audit()</code> ran after every tool call in every run. Open <code>audit.jsonl</code> in Antigravity: one line per tool call, with its input and output.</p>
+<p><strong>Checkpoint ✅</strong> You can find the <code>lookup_order</code> for A-5003, then the escalation. The blocked 820 refund has no line of its own: the hook stopped the call, so the tool never ran and never returned. That proves the block happened <em>before</em> the tool, not after.</p>
+
+<hr />
+<p><a id="p4-14"></a></p>
+<h1>P4.14 · Commit, say it back</h1>
+<h3>15 min</h3>
+<hr />
+<ol>
+<li>Type <code>/exit</code> in Claude Code and quit Antigravity.</li>
+<li>Commit <code>P4 session 2: Agent SDK, PreToolUse refund limit, escalation rules, handoff, audit hook</code>, then <strong>Push origin</strong>.</li>
+</ol>
+
+<h2>P4.14.1 · Say it back — no notes, not scored</h2>
+<p>One sentence each, starting with <strong>"because"</strong>. Test each one: does it say <em>why</em>, or only <em>what</em>?</p>
+<ol>
+<li>The 820 refund could not happen even if Claude ignored the prompt. Because…</li>
+<li>The angry customer with a photo was not escalated. Because…</li>
+<li>The blocked refund has no line in <code>audit.jsonl</code>. Because…</li>
+</ol>
+
+<h2>P4.15 · Quick reference card</h2>
+<p><strong>Agent SDK:</strong> runs the loop for you. Tools = <code>@tool</code> functions in an in-process MCP server, named <code>mcp__server__tool</code>.<br />
+<strong>PreToolUse hook:</strong> before a tool runs. Allow, deny, or deny and redirect ("call escalate_to_human").<br />
+<strong>PostToolUse hook:</strong> after a tool returns. Log, check, clean up the result.<br />
+<strong>Must never happen:</strong> hook or gate in code. Prompt rules alone are requests.<br />
+<strong>Escalate:</strong> customer asks for a person (at once) · policy gap · cannot make progress. <strong>Not:</strong> anger alone.<br />
+<strong>Fix wrong escalations:</strong> explicit criteria + borderline examples, first.<br />
+<strong>Handoff:</strong> who, wants what, what was checked, why, recommended next step.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat. Never paste your API key.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>CLINotFoundError</code></td><td>The SDK cannot find Claude Code. Run <code>ls ~/.local/bin/claude</code>. If it exists, add <code>cli_path="/Users/achu/.local/bin/claude",</code> inside <code>ClaudeAgentOptions(...)</code>.</td></tr>
+<tr><td><code>ImportError</code> for one of the names</td><td>The SDK version changed a name. Run <code>uv run python -c "import claude_agent_sdk; print(claude_agent_sdk.__version__)"</code> and send me the version.</td></tr>
+<tr><td>It asks to approve the API key, or says it is not logged in</td><td>Run <code>claude</code> once without the alias: <code>command claude</code>, answer <strong>Yes</strong> for the key, type <code>/exit</code>, then run the script again.</td></tr>
+<tr><td>The hook never prints, even for 820</td><td>Check that A-5003 has <code>"damage_photo": True</code> in <code>backend.py</code>. Claude may also escalate before trying the refund; run once more. Or the matcher name is wrong: it must be exactly <code>mcp__shop__process_refund</code>.</td></tr>
+<tr><td>Claude tries Bash or file tools</td><td>Check that <code>disallowed_tools</code> is in <code>ClaudeAgentOptions</code>. It cannot run them either way.</td></tr>
+<tr><td>Run ends with <code>result: error_max_turns</code></td><td>The 12-turn safety net was hit. Paste the output here.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

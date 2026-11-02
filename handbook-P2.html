@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P2 — CI Reviewer</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p2-0">P2.0</span><span data-t="p2-1">P2.1</span><span data-t="p2-2">P2.2</span><span data-t="p2-3">P2.3</span><span data-t="p2-4">P2.4</span><span data-t="p2-5">P2.5</span><span data-t="p2-6">P2.6</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P2</div>
+
+<p><a id="top"></a></p>
+<h1>P2 — Claude Code as a CI reviewer</h1>
+<h3>Sat 24 Oct 2026 · 90 min · Scenario 5: Claude Code for Continuous Integration</h3>
+
+<p><strong>How to use this page:</strong> one grey box = one complete message or command. Click <strong>COPY</strong>, paste, press Return. Never copy two boxes into one message.</p>
+
+<blockquote>
+<p><strong>The project in one minute.</strong> CI (continuous integration) is the robot that checks every change before it joins the main code. Today you make Claude Code that robot's reviewer: it runs with no human at the keyboard, follows strict review rules, returns findings as data a program can read, and reviews file by file so it misses less.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>3.6</strong> Claude Code in CI: <code>-p</code>, JSON output, schema, independent review</td><td>D3 · 20%</td><td>P2.2, P2.4</td></tr>
+<tr><td><strong>4.1</strong> Explicit criteria to cut false positives</td><td>D4 · 20%</td><td>P2.3</td></tr>
+<tr><td><strong>4.6</strong> Multi-pass review</td><td>D4 · 20%</td><td>P2.5</td></tr>
+</tbody>
+</table>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>10 min</td><td>P2.0 · Pre-test — before you read anything else</td></tr>
+<tr><td>10 min</td><td>P2.1 · Set up and plant two bugs</td></tr>
+<tr><td>10 min</td><td>P2.2 · Run Claude Code with no human</td></tr>
+<tr><td>15 min</td><td>P2.3 · Vague review vs explicit criteria</td></tr>
+<tr><td>15 min</td><td>P2.4 · Findings as data</td></tr>
+<tr><td>20 min</td><td>P2.5 · File by file, then across files</td></tr>
+<tr><td>10 min</td><td>P2.6 · Restore, commit, say it back</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Product facts move.</strong> Flags such as <code>--json-schema</code> and <code>--allowedTools</code> change between Claude Code versions. If a flag is rejected, run <code>claude --help</code> and check the live docs. For the exam, use the guide's terms.</p>
+</blockquote>
+<blockquote>
+<p><strong>Cost.</strong> These runs use your Claude Pro login, not API credits. Each run takes 20–60 seconds.</p>
+</blockquote>
+
+<hr />
+<p><a id="p2-0"></a></p>
+<h1>P2.0 · Pre-test — before you read anything else</h1>
+<h3>10 min · cold, no notes</h3>
+<hr />
+<p><strong>The one idea:</strong> you answer the exam guide's own CI questions <em>before</em> this guide teaches anything. Your answer then shows your real judgment, not what you just read.</p>
+<p><strong>Done 24 Oct, not scored.</strong> The answers in the PDF sit directly under each question, so they were seen before answering. Skip to P2.1. From P3 on, the coach pastes pre-test questions into the chat instead. Do not open Section 9 in the PDF again.</p>
+
+<hr />
+<p><a id="p2-1"></a></p>
+<h1>P2.1 · Set up and plant two bugs</h1>
+<h3>10 min</h3>
+<hr />
+<p><strong>The one idea:</strong> a reviewer is only worth testing if there is something to find. You break the P1 code on purpose, in two ways, and restore it in P2.6.</p>
+<p><strong>You need:</strong> P1 committed and pushed. In GitHub Desktop, "Changes" shows 0 files. If not, commit P1 first.</p>
+
+<h2>P2.1.1 · Make the P2 folder and its two files</h2>
+<p>In the Terminal, go to the repository root and start Claude Code there:</p>
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds &amp;&amp; mkdir -p p2-ci-review &amp;&amp; claude</code></pre>
+<p>Paste:</p>
+<pre><code>Create p2-ci-review/criteria.md with exactly this content, and nothing else:
+
+# Review criteria (team standard)
+
+Report ONLY these three kinds of problem:
+1. bug: the code does something different from what its name, docstring or tests say.
+2. error-handling: an error can be raised or swallowed in a way the caller cannot handle.
+3. security: untrusted input reaches something dangerous.
+
+Do NOT report: style, naming, formatting, missing docstrings, missing type hints, "consider" suggestions, or anything you are not sure is a real problem.
+
+For every finding give: file, line, category, one sentence on what goes wrong, one sentence fix.
+If nothing meets these criteria, return no findings. No findings is a good result.</code></pre>
+<p>Then paste:</p>
+<pre><code>Create p2-ci-review/review-schema.json with exactly this content, and nothing else:
+
+{
+  "type": "object",
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": {"type": "string"},
+          "line": {"type": "integer"},
+          "category": {"type": "string", "enum": ["bug", "error-handling", "security"]},
+          "issue": {"type": "string"},
+          "fix": {"type": "string"}
+        },
+        "required": ["file", "line", "category", "issue", "fix"]
+      }
+    }
+  },
+  "required": ["findings"]
+}</code></pre>
+
+<h2>P2.1.2 · Plant the two bugs</h2>
+<p>Still in Claude Code, paste:</p>
+<pre><code>This is a deliberate exercise: I am planting two bugs for a code reviewer to find. Make exactly these two changes and nothing else. Do not fix anything else, do not run tests, do not add comments that reveal the bugs.
+1. In p1-team-setup/src/orders/service.py, make the function that lists orders drop the last order from its result (for example with a [:-1] slice).
+2. In p1-team-setup/src/orders/api.py, in the function that cancels an order, convert the order id to a string with str() before passing it to the service.
+Then tell me which two lines you changed.</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude names two changed lines, one in each file. Type <code>/exit</code>.</p>
+<blockquote>
+<p><strong>Why these two.</strong> Bug 1 is <em>local</em>: you can see it by reading one file. Bug 2 is <em>across files</em>: <code>api.py</code> looks harmless alone. It only breaks because <code>service.py</code> stores order ids as numbers. P2.5 shows which review finds which.</p>
+</blockquote>
+
+<hr />
+<p><a id="p2-2"></a></p>
+<h1>P2.2 · Run Claude Code with no human</h1>
+<h3>10 min · <span class="tag">3.6</span></h3>
+<hr />
+<p><strong>The one idea:</strong> in CI, nobody is at the keyboard to answer questions. Claude Code must take one prompt, answer, and stop.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>Headless</strong>: running with no screen and no human. You start it with <code>-p</code> (short for "print").</li>
+<li><strong><code>--allowedTools</code></strong>: the tools Claude may use without asking. With no human, anything that would need approval cannot happen.</li>
+</ul>
+<p>Go into the P1 code folder. Every review in this guide runs from here, so the team's CLAUDE.md is loaded:</p>
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds/p1-team-setup</code></pre>
+<p>Run a headless review:</p>
+<pre><code>claude -p "Review src/orders/service.py and list any bugs. Be brief." --allowedTools "Read,Grep,Glob"</code></pre>
+<p><strong>Checkpoint ✅</strong> Text prints, then the Terminal prompt comes back. No questions, no approval prompts. Claude Code ran once and stopped.</p>
+<p>Now the same run, as data:</p>
+<pre><code>claude -p "Review src/orders/service.py and list any bugs. Be brief." --allowedTools "Read,Grep,Glob" --output-format json</code></pre>
+<p><strong>Checkpoint ✅</strong> One block of JSON. The review text is inside a field (usually <code>"result"</code>), with extra fields such as cost and duration. A CI program can read this. A human sentence it cannot.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> In a pipeline, Claude Code always runs with <code>-p</code>. Without it, it waits for a person who never comes.</p>
+<p><b>2.</b> The team's CLAUDE.md is how the CI reviewer learns the team's standards. It loads in CI exactly as it does for a person.</p>
+<p><b>3.</b> A fresh headless run is an <em>independent</em> reviewer. The same session that wrote the code is a weaker reviewer of it, because it already "believes" its own reasoning.</p>
+<p><em>Trap answer to spot:</em> made-up flags or environment variables that sound plausible. Know the real ones: <code>-p</code>, <code>--output-format json</code>, <code>--json-schema</code>.</p>
+</blockquote>
+
+<hr />
+<p><a id="p2-3"></a></p>
+<h1>P2.3 · Vague review vs explicit criteria</h1>
+<h3>15 min · <span class="tag">4.1</span></h3>
+<hr />
+<p><strong>The one idea:</strong> "find any issues" invites noise. Developers stop reading a reviewer that cries wolf. Explicit criteria say what to report <em>and what not to</em>.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>False positive</strong>: a finding that is not a real problem, for example a style opinion.</li>
+<li><strong>Explicit criteria</strong>: a written list of exactly which problems count.</li>
+</ul>
+
+<h2>P2.3.1 · The vague review</h2>
+<pre><code>claude -p "Review src/orders/service.py and list every issue you find." --allowedTools "Read,Grep,Glob"</code></pre>
+<p>Count the findings. Mark each one: <strong>real bug</strong> or <strong>noise</strong> (style, naming, "consider", docstrings).</p>
+
+<h2>P2.3.2 · The explicit review</h2>
+<pre><code>claude -p "$(cat ../p2-ci-review/criteria.md)
+
+Review only this file: src/orders/service.py" --allowedTools "Read,Grep,Glob"</code></pre>
+<p><code>$(cat ...)</code> pastes the whole criteria file into the prompt.</p>
+<p><strong>Checkpoint ✅</strong> Fewer findings. The planted bug (the dropped last order) is still found. Most of the noise is gone. Write down both counts: vague __ findings, explicit __ findings.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Too many false positives: write down exactly which kinds of problem count, and say what must <em>not</em> be reported.</p>
+<p><b>2.</b> Ask for evidence with each finding (line, what goes wrong). It forces the reviewer to check before it reports.</p>
+<p><b>3.</b> Say that "no findings" is a good result. Otherwise the reviewer invents something to justify the run.</p>
+<p><em>Trap answer to spot:</em> "ask it to be more careful" or "only report high-confidence findings". Vague words do not cut noise. A written list does.</p>
+</blockquote>
+
+<hr />
+<p><a id="p2-4"></a></p>
+<h1>P2.4 · Findings as data</h1>
+<h3>15 min · <span class="tag">3.6</span></h3>
+<hr />
+<p><strong>The one idea:</strong> a CI system posts each finding as a comment on the exact line of code. It can only do that if every finding has the same fields every time. A schema forces that shape.</p>
+<p>One term:</p>
+<ul>
+<li><strong>JSON schema</strong>: a description of the exact shape the data must have: which fields, which types, which values are allowed. Your <code>review-schema.json</code> is one.</li>
+</ul>
+<p>Run, and save the result to a file:</p>
+<pre><code>mkdir -p ../p2-ci-review/out &amp;&amp; claude -p "$(cat ../p2-ci-review/criteria.md)
+
+Review only this file: src/orders/service.py" --allowedTools "Read,Grep,Glob" --output-format json --json-schema "$(cat ../p2-ci-review/review-schema.json)" &gt; ../p2-ci-review/out/service-structured.json</code></pre>
+<ol>
+<li>In the Antigravity Explorer, open <code>p2-ci-review/out/service-structured.json</code>.</li>
+<li>Press <strong>Shift+Option+F</strong> to format it.</li>
+<li>Find the findings. In current versions they are in a field such as <code>"structured_output"</code>. In some versions they are inside <code>"result"</code>.</li>
+</ol>
+<p><strong>Checkpoint ✅</strong> Each finding has exactly <code>file</code>, <code>line</code>, <code>category</code>, <code>issue</code> and <code>fix</code>, and <code>category</code> is one of the three allowed values.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> CI needs findings a program can read: use <code>--output-format json</code> together with <code>--json-schema</code>.</p>
+<p><b>2.</b> The schema fixes the shape. The criteria fix the content. You need both.</p>
+<p><b>3.</b> When a review runs again after new commits, give it the previous findings and ask for only new or still-open problems. Otherwise every comment is posted twice.</p>
+<p><em>Trap answer to spot:</em> "parse the text output with a script". Text changes shape from run to run. A schema does not.</p>
+</blockquote>
+
+<hr />
+<p><a id="p2-5"></a></p>
+<h1>P2.5 · File by file, then across files</h1>
+<h3>20 min · <span class="tag">4.6</span></h3>
+<hr />
+<p><strong>The one idea:</strong> one review of many files at once spreads its attention thin. Review each file alone first, then do one extra pass that looks only at how the files work together.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>Per-file pass</strong>: one review per file, looking only at that file.</li>
+<li><strong>Integration pass</strong>: one review across files, looking only at problems <em>between</em> them.</li>
+</ul>
+
+<h2>P2.5.1 · Create the review script</h2>
+<p>Start Claude Code from the repository root:</p>
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds &amp;&amp; claude</code></pre>
+<p>Paste:</p>
+<pre><code>Create p2-ci-review/run_review.sh with exactly this content, then make it executable with chmod +x. Do not run it.
+
+#!/bin/bash
+# Multi-pass review: one pass per file, then one integration pass.
+set -e
+cd "$(dirname "$0")/../p1-team-setup"
+OUT=../p2-ci-review/out
+mkdir -p "$OUT"
+CRITERIA="$(cat ../p2-ci-review/criteria.md)"
+SCHEMA="$(cat ../p2-ci-review/review-schema.json)"
+
+for f in src/orders/service.py src/orders/api.py src/orders/models.py; do
+  name=$(basename "$f" .py)
+  echo "Pass 1 (per file): $f"
+  claude -p "$CRITERIA
+
+Review only this file: $f. Ignore every other file." \
+    --allowedTools "Read,Grep,Glob" \
+    --output-format json --json-schema "$SCHEMA" > "$OUT/$name.json"
+done
+
+PREVIOUS="$(cat "$OUT"/service.json "$OUT"/api.json "$OUT"/models.json)"
+echo "Pass 2 (integration)"
+claude -p "$CRITERIA
+
+You are the integration reviewer for src/orders/service.py, api.py and models.py.
+Per-file reviews already ran. Their findings are below. Do NOT repeat them.
+Report ONLY problems BETWEEN files: a caller that passes the wrong type or value to another module, names or types that do not match across files, errors that break across a call.
+
+Per-file findings:
+$PREVIOUS" \
+  --allowedTools "Read,Grep,Glob" \
+  --output-format json --json-schema "$SCHEMA" > "$OUT/integration.json"
+
+echo "Done. Results in p2-ci-review/out/"</code></pre>
+<p>Type <code>/exit</code>.</p>
+
+<h2>P2.5.2 · Run it</h2>
+<pre><code>./p2-ci-review/run_review.sh</code></pre>
+<p>It takes 2–4 minutes. You see four "Pass" lines.</p>
+
+<h2>P2.5.3 · Read the results</h2>
+<p>Open the four files in <code>p2-ci-review/out/</code> and format each with Shift+Option+F.</p>
+<p><strong>Checkpoint ✅</strong></p>
+<ul>
+<li><code>service.json</code> finds the dropped last order (bug 1, local).</li>
+<li><code>api.json</code> alone may or may not flag the <code>str()</code>. It looks harmless in one file.</li>
+<li><code>integration.json</code> either finds bug 2, or is <strong>empty because <code>api.json</code> already found it</strong>. Both are correct: the integration pass is told not to repeat earlier findings.</li>
+</ul>
+<blockquote>
+<p><strong>Why api.json can find a cross-file bug.</strong> The per-file reviewer has the Read tool, so it can open <code>service.py</code> to check how <code>cancel_order</code> works, even when told to review only <code>api.py</code>. To make a pass truly file-only, put the file's text in the prompt and give it no Read tool. Results also vary between runs.</p>
+</blockquote>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> A big review gives patchy, inconsistent results: split it. One focused pass per file finds local problems.</p>
+<p><b>2.</b> Add one separate pass that looks only at how the files connect. Local passes cannot see those problems.</p>
+<p><b>3.</b> Pass the earlier findings into the later pass, and tell it not to repeat them.</p>
+<p><em>Trap answer to spot:</em> "use a model with a bigger context window" or "tell developers to make smaller changes". The first does not fix thin attention. The second moves the problem to people.</p>
+</blockquote>
+
+<hr />
+<p><a id="p2-6"></a></p>
+<h1>P2.6 · Restore, commit, say it back</h1>
+<h3>10 min</h3>
+<hr />
+
+<h2>P2.6.1 · Remove the planted bugs</h2>
+<ol>
+<li>In GitHub Desktop, find <code>p1-team-setup/src/orders/service.py</code> and <code>api.py</code> in the Changes list.</li>
+<li>Right-click each one and choose <strong>Discard Changes…</strong>. Confirm.</li>
+</ol>
+<p><strong>Checkpoint ✅</strong> Only <code>p2-ci-review/</code> files remain in the Changes list. The P1 code is back to its committed state.</p>
+
+<h2>P2.6.2 · Commit and push</h2>
+<ol>
+<li>Write the summary <code>P2: headless CI reviewer, criteria, schema, multi-pass</code>.</li>
+<li>Click <strong>Commit to main</strong>, then <strong>Push origin</strong>.</li>
+</ol>
+<p>The <code>out/</code> results are worth committing: they are your portfolio evidence that the multi-pass review found a bug the single-file pass missed.</p>
+
+<h2>P2.6.3 · Say it back — 3 minutes, no notes, not scored</h2>
+<p>One sentence each, in the coaching chat:</p>
+<ol>
+<li>Your two counts from P2.3 (vague vs explicit), and what made the difference.</li>
+<li>Which pass found bug 2, and why the per-file pass could not be relied on to find it.</li>
+<li>Why a CI review needs both a schema and criteria.</li>
+</ol>
+
+<h2>P2.7 · If you're ahead</h2>
+<p>Run the integration pass again after fixing only bug 1. Give it the previous <code>integration.json</code> and ask it to report only new or still-open problems. Check that it reports bug 2 once and nothing it already said.</p>
+
+<h2>P2.8 · Quick reference card</h2>
+<p><strong>Headless:</strong> <code>claude -p "..."</code> runs once and exits. Always in CI.<br />
+<strong>Tool permission with no human:</strong> <code>--allowedTools "Read,Grep,Glob"</code>.<br />
+<strong>Data, not text:</strong> <code>--output-format json</code>. <strong>Fixed shape:</strong> <code>--json-schema</code>.<br />
+<strong>Team standards in CI:</strong> CLAUDE.md, loaded as usual.<br />
+<strong>Independent review:</strong> a fresh run, not the session that wrote the code.<br />
+<strong>Fewer false positives:</strong> written criteria, what to skip, evidence per finding, "none is fine".<br />
+<strong>Big review:</strong> one pass per file, then one integration pass, earlier findings passed in.<br />
+<strong>Re-review after commits:</strong> pass previous findings, report only new or still open.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>unknown option '--json-schema'</code></td><td>Your version does not have the flag. Remove it, and add "Return only JSON that matches this schema:" plus the schema to the prompt. For the exam, the flag is <code>--json-schema</code>.</td></tr>
+<tr><td>The run hangs with no output</td><td>Some tool needs approval. Press Ctrl+C. Check that the command has <code>--allowedTools "Read,Grep,Glob"</code>.</td></tr>
+<tr><td><code>cat: ../p2-ci-review/criteria.md: No such file</code></td><td>You are not in <code>p1-team-setup</code>. Run the <code>cd</code> command in P2.2 first.</td></tr>
+<tr><td><code>permission denied: ./p2-ci-review/run_review.sh</code></td><td>Run <code>chmod +x p2-ci-review/run_review.sh</code>, from the repository root.</td></tr>
+<tr><td>The JSON file is empty or holds an error</td><td>Open it and read the error. Usually a typo in the schema. Paste it into the coaching chat.</td></tr>
+<tr><td>Claude refused to plant the bugs</td><td>Tell it again that this is a review exercise in your own practice repository. Or make the two edits by hand in Antigravity.</td></tr>
+<tr><td>Discard Changes removed P1 work</td><td>It cannot: P1 was committed first. If P1 was not committed, stop and ask in the coaching chat before doing anything else.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

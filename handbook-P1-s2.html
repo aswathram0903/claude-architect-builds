@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P1 — Session 2 · P1.9–P1.14</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p1-9">P1.9</span><span data-t="p1-10">P1.10</span><span data-t="p1-11">P1.11</span><span data-t="p1-12">P1.12</span><span data-t="p1-13">P1.13</span><span data-t="p1-14">P1.14</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P1</div>
+
+<p><a id="top"></a></p>
+<h1>P1 · Session 2 — Tools, modes and sessions</h1>
+<h3>Sat 24 Oct 2026 · 90 min · Scenario 2: Code Generation with Claude Code</h3>
+
+<p><strong>How to use this page:</strong> keep it open next to your Terminal. One grey box = one complete message. Click <strong>COPY</strong>, paste, press Return. Never copy two boxes into one message.</p>
+
+<blockquote>
+<p><strong>Where you are.</strong> Session 1 gave the team shared instructions, rules, a command and a skill. Session 2 gives the team shared tools (MCP servers), teaches when Claude must plan before it acts, how to steer it to the right result, and how to continue work across days.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>2.4</strong> MCP servers: project vs user scope, environment variables</td><td>D2 · 18%</td><td>P1.10</td></tr>
+<tr><td><strong>3.4</strong> Plan mode vs direct execution; Explore subagent</td><td>D3 · 20%</td><td>P1.11</td></tr>
+<tr><td><strong>3.5</strong> Iterative refinement: interview, examples, tests</td><td>D3 · 20%</td><td>P1.12</td></tr>
+<tr><td><strong>1.7</strong> Session resume and fork</td><td>D1 · 27%</td><td>P1.13</td></tr>
+</tbody>
+</table>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>5 min</td><td>P1.9 · Before you start</td></tr>
+<tr><td>20 min</td><td>P1.10 · Shared and personal MCP servers</td></tr>
+<tr><td>20 min</td><td>P1.11 · Plan mode, direct execution, Explore</td></tr>
+<tr><td>20 min</td><td>P1.12 · Steer Claude to the right result</td></tr>
+<tr><td>15 min</td><td>P1.13 · Name, resume and fork a session</td></tr>
+<tr><td>10 min</td><td>P1.14 · Commit and the end-of-project check</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Product facts move.</strong> Commands such as <code>/rename</code>, <code>--fork-session</code> and the plan-mode key change between Claude Code versions. If a step does not work as written, check the live docs (docs.claude.com → Claude Code) or run <code>/help</code>. For the exam, use the guide's terms.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-9"></a></p>
+<h1>P1.9 · Before you start</h1>
+<h3>5 min</h3>
+<hr />
+<p><strong>The one idea:</strong> this session uses <code>npx</code>, a tool that starts small Node.js programs without installing them permanently. Check it first.</p>
+<ol>
+<li>Open the Terminal and go to the project folder.</li>
+<li>Run this check:</li>
+</ol>
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds/p1-team-setup &amp;&amp; npx --version</code></pre>
+<p><strong>Checkpoint ✅</strong> You see a version number, and the prompt ends in <code>p1-team-setup %</code>. Stay in this folder for the whole session.</p>
+<blockquote>
+<p><strong>Why not uvx.</strong> An earlier version of this guide used Python servers through <code>uvx</code>. On an Intel Mac they try to compile a library from source and fail. The Node servers below need no compiling. The exam point is the same.</p>
+</blockquote>
+<p>Do <strong>not</strong> start Claude Code yet. P1.10 starts it.</p>
+
+<hr />
+<p><a id="p1-10"></a></p>
+<h1>P1.10 · Shared and personal MCP servers</h1>
+<h3>20 min · <span class="tag">2.4</span></h3>
+<hr />
+<p><strong>The one idea:</strong> an MCP server gives Claude extra tools. Where you configure it decides who gets it, just like CLAUDE.md.</p>
+<p><strong>By the end you can:</strong> add a team server in <code>.mcp.json</code> that reads a value from an environment variable, add a personal server in <code>~/.claude.json</code>, and show that Claude can use both at the same time.</p>
+
+<table>
+<thead><tr><th>Scope</th><th>File</th><th>Who gets it</th></tr></thead>
+<tbody>
+<tr><td>Project</td><td><code>.mcp.json</code> at the repository root</td><td>Everyone who clones. Committed to git.</td></tr>
+<tr><td>User</td><td><code>~/.claude.json</code> in your home folder</td><td>Only you. Never in git. Good for trials.</td></tr>
+</tbody>
+</table>
+<p>Two terms:</p>
+<ul>
+<li><strong>MCP server</strong>: a small program that gives Claude tools through a standard protocol (Model Context Protocol).</li>
+<li><strong>Environment variable</strong>: a named value set in your Terminal, for example <code>DOCS_DIR=./src</code>. Programs can read it. It is not saved in any file you commit.</li>
+</ul>
+
+<h2>P1.10.1 · The team server</h2>
+<p>The team server lets Claude read one folder of the project. The folder comes from an environment variable. Start Claude Code:</p>
+<pre><code>claude</code></pre>
+<p>Then paste:</p>
+<pre><code>Replace the whole content of .mcp.json in this folder (create it if it does not exist) with exactly this, and nothing else:
+
+{
+  "mcpServers": {
+    "team-docs": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${DOCS_DIR:-./docs}"]
+    }
+  }
+}</code></pre>
+<blockquote>
+<p><strong>What <code>${DOCS_DIR:-./docs}</code> means.</strong> Claude Code replaces it with the value of the environment variable <code>DOCS_DIR</code>. If that variable is not set, it uses <code>./docs</code>. In a real team, the same pattern carries an API token, for example <code>${GITHUB_TOKEN}</code>. The file is shared. The secret stays on each laptop.</p>
+</blockquote>
+
+<h2>P1.10.2 · The personal server</h2>
+<ol>
+<li>Type <code>/exit</code>.</li>
+<li>In the Terminal (not inside Claude Code), run:</li>
+</ol>
+<pre><code>claude mcp add notes --scope user -- npx -y @modelcontextprotocol/server-memory</code></pre>
+<ol start="3">
+<li>Download both servers once, so the first start does not time out. Each command prints a little and then waits. Press <strong>Ctrl+C</strong> to stop it:</li>
+</ol>
+<pre><code>npx -y @modelcontextprotocol/server-filesystem ./docs</code></pre>
+<pre><code>npx -y @modelcontextprotocol/server-memory</code></pre>
+<ol start="4">
+<li>Check both servers:</li>
+</ol>
+<pre><code>claude mcp list</code></pre>
+<p><strong>Checkpoint ✅</strong> The list shows <code>notes</code> and <code>team-docs</code>, among many others. If <code>team-docs</code> says it needs approval, that is expected. The next step approves it.</p>
+<blockquote>
+<p><strong>Why the list is long.</strong> Most entries come from your claude.ai account and installed plugins, not from this repository. Claude Code loads servers from several places, and all their tools are available together.</p>
+</blockquote>
+
+<h2>P1.10.3 · Use both at once, with a variable</h2>
+<ol>
+<li>Set the variable and start Claude Code in the same command:</li>
+</ol>
+<pre><code>DOCS_DIR=./src claude</code></pre>
+<ol start="2">
+<li>Claude Code asks whether to use the MCP servers in <code>.mcp.json</code>. Approve <code>team-docs</code>.</li>
+<li>Type <code>/mcp</code>. Check that <code>team-docs</code> and <code>notes</code> show as connected. Press Escape.</li>
+<li>Paste:</li>
+</ol>
+<pre><code>Use only MCP tools for this, not Bash, Read, Grep or Glob.
+1. Using the team-docs server: which directory are you allowed to read? List what is in it.
+2. Using the notes server: store a note that says "P1 session 2: MCP scopes tested", then read it back.
+For each answer, name the MCP server and the tool you used.</code></pre>
+<p><strong>Checkpoint ✅</strong> <code>team-docs</code> reads <code>src</code>, not <code>docs</code>, because <code>DOCS_DIR</code> was set. The note comes back from <code>notes</code>. Both servers' tools were available in the same session.</p>
+
+<h2>P1.10.4 · Prove what git sees</h2>
+<p>In a second Terminal tab, run:</p>
+<pre><code>git status --short</code></pre>
+<p><strong>Checkpoint ✅</strong> <code>p1-team-setup/.mcp.json</code> shows as new. <code>~/.claude.json</code> does not show, because it is outside the repository. No folder value and no secret is in any committed file.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> A tool the whole team needs goes in the shared project file, <code>.mcp.json</code>. <i>Example: everyone uses Jira, so the Jira server goes there.</i></p>
+<p><b>2.</b> A password never goes in that shared file. Write a blank like <code>${JIRA_TOKEN}</code>, and each person fills it in on their own laptop.</p>
+<p><b>3.</b> A tool only you are trying goes in your personal file, <code>~/.claude.json</code>.</p>
+<p><b>4.</b> All connected tools work at the same time, in the same conversation.</p>
+<p><em>Trap answer to spot:</em> an option that writes a real password or token into a shared file.</p>
+</blockquote>
+<blockquote>
+<p><strong>One idea you do not build today: MCP resources.</strong> A server can also offer <em>resources</em>, which are read-only content lists such as a catalogue of issues or a database schema. Claude can see what exists without many exploratory tool calls. Resources are for content. Tools are for actions.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-11"></a></p>
+<h1>P1.11 · Plan mode, direct execution, Explore</h1>
+<h3>20 min · <span class="tag">3.4</span></h3>
+<hr />
+<p><strong>The one idea:</strong> the size and risk of the change decide the mode. Small and clear: do it. Large, multi-file or with design choices: plan first.</p>
+<p><strong>By the end you can:</strong> choose the mode for a task, switch into plan mode, and use the Explore subagent to keep a long search out of your conversation.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>Plan mode</strong>: Claude reads and thinks, then shows a plan. It does not change any file until you approve.</li>
+<li><strong>Explore subagent</strong>: a built-in helper that searches the codebase in its own context and returns only a summary.</li>
+</ul>
+
+<h2>P1.11.1 · Task A — direct execution</h2>
+<p>A one-line change in one file. No design choice. Paste:</p>
+<pre><code>In src/orders/service.py, make cancel raise a ValueError with the message "Order already cancelled" if the order is already cancelled. Change only that function.</code></pre>
+<p><strong>Checkpoint ✅</strong> One small edit in one file. No plan was needed.</p>
+
+<h2>P1.11.2 · Task B — plan mode</h2>
+<ol>
+<li>Press <strong>Shift+Tab</strong> until the status line under the prompt shows <strong>plan mode</strong>. It usually takes two presses.</li>
+<li>Paste:</li>
+</ol>
+<pre><code>Add an order priority (low, normal, high) that changes the order in which list returns orders: high first, then normal, then low, and oldest first inside each priority.
+This touches the model, the service, the API and the tests.
+Plan first. Give me the plan with the files you will change, the order of the changes, and any design choice I need to make.</code></pre>
+<ol start="3">
+<li>Read the plan. If it asks you a design question, answer it.</li>
+<li>Approve the plan when Claude Code offers to start. Claude Code leaves plan mode and makes the changes.</li>
+</ol>
+<p><strong>Checkpoint ✅</strong> You saw a plan before any file changed. The changes touched four or more files.</p>
+
+<h2>P1.11.3 · Task C — the Explore subagent</h2>
+<p>Paste:</p>
+<pre><code>Use the Explore subagent for this. Find every place in this codebase where an order's status is set or changed. Return only a table: file, line, the status value, and the function. Do not edit anything.</code></pre>
+<p><strong>Checkpoint ✅</strong> The trace shows a separate Explore task. Your conversation gets only the short table, not every file the search read.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Small change, one place, and you know what to do: let Claude do it directly. <i>Example: fix one function, add one check.</i></p>
+<p><b>2.</b> Big change, many files, or a design choice to make: plan mode first. <i>Example: split an app into parts, replace a library used in 40 files.</i></p>
+<p><b>3.</b> Claude must read a lot just to find something: use the Explore subagent, so all that reading stays out of your conversation.</p>
+<p><b>4.</b> Often the best answer is both: plan mode to work out the plan, then direct execution to carry it out.</p>
+<p><em>Trap answer to spot:</em> "start directly and switch to planning if it gets hard", when the scenario already tells you the change is big.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-12"></a></p>
+<h1>P1.12 · Steer Claude to the right result</h1>
+<h3>20 min · <span class="tag">3.5</span></h3>
+<hr />
+<p><strong>The one idea:</strong> when prose gives inconsistent results, stop describing and start showing. Use an interview, concrete examples and tests.</p>
+<p><strong>By the end you can:</strong> use the interview pattern, give input/output examples, and drive a fix with failing tests.</p>
+
+<h2>P1.12.1 · The interview pattern</h2>
+<p>Paste, then answer each question in one or two lines:</p>
+<pre><code>I want a function format_order_summary(order) that returns a short text summary of an order for a customer email.
+Before you write any code, interview me. Ask up to 4 questions, one at a time, about things I may not have thought of: missing values, formats, length, edge cases.
+Write nothing until I have answered all of them.</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude asked at least one question you had not thought of. Write that question down. That is the value of the pattern.</p>
+
+<h2>P1.12.2 · Input/output examples, then tests first</h2>
+<p>Paste:</p>
+<pre><code>Here are two concrete examples. Treat them as the specification.
+
+Example 1
+Input: Order(id="A-17", status="created", priority="high", items=3)
+Output: "Order A-17 · 3 items · high priority · created"
+
+Example 2
+Input: Order(id="B-2", status="cancelled", priority="normal", items=1)
+Output: "Order B-2 · 1 item · cancelled"
+
+Notes: "item" is singular for 1. Normal priority is not shown.
+
+Step 1: write tests in tests/test_summary.py from these two examples plus one edge case of your choice. Do not write the function yet.
+Step 2: run the tests with: uv run --with pytest pytest -q
+You may run that command. It does not add a dependency to the project.
+Step 3: write format_order_summary in src/orders/summary.py. Run the tests again. Repeat until all pass.
+Show me the test output after each run.</code></pre>
+<p><strong>Checkpoint ✅</strong> The first run fails, because the function does not exist yet. The last run passes. You saw Claude use the test failures to fix its code.</p>
+<p>If the model fields in your codebase are different from the examples, Claude says so. Tell it to adapt the examples to the real fields.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Claude keeps getting the format wrong from your description: show it 2–3 examples of input and the exact output you want.</p>
+<p><b>2.</b> You do not know the area well: ask Claude to interview you before it builds.</p>
+<p><b>3.</b> You want it to improve step by step: write the tests first, then let Claude fix the code until they pass.</p>
+<p><b>4.</b> Several problems that affect each other: put them all in one message. Problems that do not affect each other: fix one at a time.</p>
+<p><em>Trap answer to spot:</em> more explanation in prose when the description is already being misread. Show, do not describe.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-13"></a></p>
+<h1>P1.13 · Name, resume and fork a session</h1>
+<h3>15 min · <span class="tag">1.7</span></h3>
+<hr />
+<p><strong>The one idea:</strong> resume a session when what Claude saw is still true. Start fresh with a summary when the files have changed under it.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>Resume</strong>: open an earlier conversation and continue with all its context.</li>
+<li><strong>Fork</strong>: make a copy of a conversation, so you can try a different approach without changing the original.</li>
+</ul>
+
+<h2>P1.13.1 · Name this session and leave</h2>
+<ol>
+<li>Type <code>/rename p1-priority-work</code>.</li>
+<li>Type <code>/exit</code>.</li>
+</ol>
+
+<h2>P1.13.2 · Change a file behind Claude's back</h2>
+<p>Open <code>src/orders/summary.py</code> in any text editor. Add this line at the top and save:</p>
+<pre><code># Summary format agreed with support team, 24 Oct</code></pre>
+
+<h2>P1.13.3 · Resume and tell it what changed</h2>
+<pre><code>claude --resume p1-priority-work</code></pre>
+<p>If the name does not work, run <code>claude --resume</code> and pick the session from the list. Then paste:</p>
+<pre><code>Since we last spoke, I edited src/orders/summary.py by hand (I added a comment at the top). Re-read that file before you rely on anything you saw earlier. Then tell me in one line what changed.</code></pre>
+<p><strong>Checkpoint ✅</strong> Claude re-reads the file and reports the new comment. It continued with all the earlier context of the session.</p>
+
+<h2>P1.13.4 · Fork to try another approach</h2>
+<ol>
+<li>Type <code>/exit</code>.</li>
+<li>Run:</li>
+</ol>
+<pre><code>claude --resume p1-priority-work --fork-session</code></pre>
+<ol start="3">
+<li>Paste:</li>
+</ol>
+<pre><code>This is a fork. Without changing any file, describe in 5 lines how you would implement priority as an integer (1-3) instead of a text value, and what that would change in the tests.</code></pre>
+<p><strong>Checkpoint ✅</strong> The fork knows the whole priority discussion. The original session <code>p1-priority-work</code> is unchanged. Check with <code>claude --resume</code>: both sessions show in the list.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> You come back to yesterday's work and little has changed: resume the session, and tell Claude which files you changed.</p>
+<p><b>2.</b> A lot has changed since: start a new session and give it a short summary of what you concluded. The old session holds old file contents that would mislead it.</p>
+<p><b>3.</b> You want to try two approaches from the same starting point: fork the session.</p>
+<p><em>Trap answer to spot:</em> resuming a session as if nothing changed.</p>
+</blockquote>
+
+<hr />
+<p><a id="p1-14"></a></p>
+<h1>P1.14 · Commit and the end-of-project check</h1>
+<h3>10 min</h3>
+<hr />
+
+<h2>P1.14.1 · Commit and push</h2>
+<ol>
+<li>Type <code>/exit</code>.</li>
+<li>In GitHub Desktop, write the summary <code>P1 session 2: MCP scopes, plan mode, iterative refinement, sessions</code>.</li>
+<li>Click <strong>Commit to main</strong>, then <strong>Push origin</strong>.</li>
+</ol>
+
+<h2>P1.14.2 · The check — answer in the coaching chat</h2>
+<p>Four questions. For each one, send the letter (or letters) <strong>and one sentence of reasoning</strong>. An answer without reasoning counts as unanswered. No notes, no Claude Code.</p>
+
+<p><strong>Question 1</strong> · <em>Skip it.</em> Section 9 Q5 is spent: the P1.11 exam lens gives its answer away.</p>
+<blockquote><p><strong>What this check measures.</strong> Questions 2–4 test what this guide taught today, so they check recall, not exam judgment. Monday's drill tests judgment with new scenarios.</p></blockquote>
+
+<p><strong>Question 2</strong> · <span class="tag">3.3</span> D3 · 20% · select ONE</p>
+<p>Your team's repository has infrastructure files (<code>*.tf</code>) in module folders across the codebase, and the team adds new module folders every sprint. The security team wants its infrastructure conventions applied whenever Claude edits a <code>.tf</code> file. Developers who never touch infrastructure complain that the root CLAUDE.md is already long and they do not want more instructions loaded into their sessions. What should you do?</p>
+<p>A. Add an "Infrastructure conventions" section to the root CLAUDE.md with a clear heading, so Claude can find it when it edits <code>.tf</code> files.<br />
+B. Create <code>.claude/rules/infrastructure.md</code> with YAML frontmatter <code>paths: ["**/*.tf"]</code>.<br />
+C. Add a CLAUDE.md with the conventions to each module folder that contains <code>.tf</code> files.<br />
+D. Create a skill <code>infrastructure-conventions</code> whose description says to use it whenever infrastructure files are edited.</p>
+
+<p><strong>Question 3</strong> · <span class="tag">2.4</span> D2 · 18% · select TWO</p>
+<p>Your team wants every developer to have the same issue-tracker MCP server. Each developer has a personal API token, and tokens must never reach the repository. One developer also wants to try an experimental documentation server that nobody else has agreed to use yet. Which two actions are correct?</p>
+<p>A. Add the issue-tracker server to <code>.mcp.json</code>, with the token written as <code>${TRACKER_TOKEN}</code>.<br />
+B. Ask each developer to add the issue-tracker server to their own <code>~/.claude.json</code> with their token written in.<br />
+C. Add the experimental server to that developer's <code>~/.claude.json</code>.<br />
+D. Add the experimental server to <code>.mcp.json</code> so the team can try it if they want.<br />
+E. Commit <code>.mcp.json</code> with a placeholder token and ask developers to replace it locally.</p>
+
+<p><strong>Question 4</strong> · <span class="tag">1.7</span> D1 · 27% · select ONE</p>
+<p>Yesterday you ran a two-hour named Claude Code session that analysed 20 files to plan a refactor. Overnight, a colleague merged changes to 12 of those 20 files. You want to continue the refactor planning today. What is the most reliable way to continue?</p>
+<p>A. Resume yesterday's session with <code>--resume</code> and continue, because it holds all the analysis.<br />
+B. Resume yesterday's session and tell the agent that some files changed overnight.<br />
+C. Start a new session and give it a structured summary of yesterday's conclusions, marking which 12 files changed, so it re-reads them.<br />
+D. Fork yesterday's session with <code>fork_session</code>, so the original analysis is kept safe while you continue.</p>
+
+<p>Send your four answers with reasoning. The coach scores them, names any trap that caught you, and updates the coverage file.</p>
+
+<h2>P1.15 · Quick reference card</h2>
+<p><strong>Team MCP server:</strong> <code>.mcp.json</code>, committed. Secrets as <code>${VARIABLE}</code>.<br />
+<strong>Personal MCP server:</strong> <code>~/.claude.json</code> (<code>claude mcp add --scope user</code>). Not in git.<br />
+<strong>All servers' tools:</strong> available at the same time. <code>/mcp</code> shows them.<br />
+<strong>Resources:</strong> content catalogues. <strong>Tools:</strong> actions.<br />
+<strong>Direct execution:</strong> small, clear, one place. <strong>Plan mode:</strong> many files, design choices.<br />
+<strong>Explore subagent:</strong> long discovery, short summary back.<br />
+<strong>Inconsistent output:</strong> 2–3 input/output examples. <strong>Unclear requirements:</strong> interview. <strong>Progressive fixes:</strong> tests first.<br />
+<strong>Interacting issues:</strong> one message. <strong>Independent issues:</strong> one at a time.<br />
+<strong>Resume:</strong> context still valid, tell it what changed. <strong>Fresh + summary:</strong> context stale. <strong>Fork:</strong> two approaches from one baseline.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>npx: command not found</code></td><td>Node.js is missing. Install it from nodejs.org (LTS), then close and open the Terminal.</td></tr>
+<tr><td><code>team-docs</code> shows "failed" or <code>CONNECTION_CLOSED</code> in <code>/mcp</code></td><td>Run the two download commands in P1.10.2 step 3, then <code>/exit</code> and start Claude Code again. Check that you are in <code>p1-team-setup</code>.</td></tr>
+<tr><td>Claude never asked to approve <code>team-docs</code></td><td>You may have approved it earlier, or Claude Code was started in another folder. Run <code>claude mcp list</code> from <code>p1-team-setup</code>.</td></tr>
+<tr><td><code>team-docs</code> reads <code>docs</code>, not <code>src</code></td><td>The variable was not set for this session. Use exactly <code>DOCS_DIR=./src claude</code> on one line.</td></tr>
+<tr><td>An old <code>fetch</code> or <code>team-clock</code> server still shows</td><td>Remove it: <code>claude mcp remove fetch --scope user</code>. <code>team-clock</code> disappears when <code>.mcp.json</code> is replaced.</td></tr>
+<tr><td>Shift+Tab does not show plan mode</td><td>Press it again: it cycles through modes. Or type <code>/help</code> and look for plan mode in your version.</td></tr>
+<tr><td>Claude does not use an Explore subagent</td><td>Your version may name it differently. The point is the separate context. Ask: "Do this in a subagent and return only the table."</td></tr>
+<tr><td><code>uv run --with pytest</code> fails</td><td>Paste the error to Claude Code and ask it to fix the test command. Do not let it add pytest to <code>pyproject.toml</code> without asking you.</td></tr>
+<tr><td><code>/rename</code> not found</td><td>Skip the name. Use <code>claude --resume</code> and pick the session from the list.</td></tr>
+<tr><td><code>--fork-session</code> rejected</td><td>Check <code>claude --help</code> for the current flag. For the exam the term is <code>fork_session</code>.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

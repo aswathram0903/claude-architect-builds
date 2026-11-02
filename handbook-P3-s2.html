@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P3 — Extraction (2)</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p3-8">P3.8</span><span data-t="p3-9">P3.9</span><span data-t="p3-10">P3.10</span><span data-t="p3-11">P3.11</span><span data-t="p3-12">P3.12</span><span data-t="p3-13">P3.13</span><span data-t="p3-14">P3.14</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P3</div>
+
+<p><a id="top"></a></p>
+<h1>P3 · Session 2 — Check, retry, batch, route</h1>
+<h3>Sun 25 Oct 2026 · 90 min · Scenario 6: Structured Data Extraction</h3>
+
+<p><strong>How to use this page:</strong> one grey box = one complete message or command. Click <strong>COPY</strong>, paste, press Return.</p>
+
+<blockquote>
+<p><strong>Where you are.</strong> Session 1 made Claude fill in the same form for every invoice. Today you add what a real pipeline needs next: code that checks whether the answers make sense, one retry that tells Claude exactly what was wrong, a cheaper way to run many invoices at once, and a rule for which invoices a person must look at.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>4.4</strong> Validation, retry with feedback, when retry cannot help</td><td>D4 · 20%</td><td>P3.9, P3.10</td></tr>
+<tr><td><strong>5.5</strong> Human review routing</td><td>D5 · 15%</td><td>P3.12</td></tr>
+<tr><td><strong>4.5</strong> Message Batches API, <code>custom_id</code>, timing</td><td>D4 · 20%</td><td>P3.11, P3.13</td></tr>
+</tbody>
+</table>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>5 min</td><td>P3.8 · Before you start</td></tr>
+<tr><td>15 min</td><td>P3.9 · Why the schema passed a wrong total</td></tr>
+<tr><td>25 min</td><td>P3.10 · Check, retry once, route</td></tr>
+<tr><td>10 min</td><td>P3.11 · Send all invoices as one batch</td></tr>
+<tr><td>10 min</td><td>P3.12 · Who decides: the human review queue</td></tr>
+<tr><td>10 min</td><td>P3.13 · Collect the batch by <code>custom_id</code></td></tr>
+<tr><td>10 min</td><td>P3.14 · Commit, say it back</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Setup from yesterday.</strong> <code>extract.py</code> uses <code>claude-haiku-5-5</code> with no <code>tool_choice</code>. Today's code reuses its model, form and prompt, so it works the same way. Cost: about 20 calls, well under 1 USD.</p>
+</blockquote>
+
+<hr />
+<p><a id="p3-8"></a></p>
+<h1>P3.8 · Before you start</h1>
+<h3>5 min</h3>
+<hr />
+<pre><code>cd ~/Documents/GitHub/claude-architect-builds/p3-extraction &amp;&amp; uv run python extract.py docs/a-tidy.txt</code></pre>
+<p><strong>Checkpoint ✅</strong> One filled-in form for Nordlicht Software. If you see an error, fix it first (troubleshooting table at the end).</p>
+
+<hr />
+<p><a id="p3-9"></a></p>
+<h1>P3.9 · Why the schema passed a wrong total</h1>
+<h3>15 min · <span class="tag">4.4</span></h3>
+<hr />
+<p><strong>The one idea:</strong> a schema checks each value <em>alone</em>: is it a number, is it on the list. It cannot check whether values make sense <em>together</em>. Your own code must do that.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>Schema error</strong>: a value of the wrong type or shape, for example text where a number belongs. Using a tool with a schema removes these.</li>
+<li><strong>Semantic error</strong>: every value has the right type, but together they are wrong, for example line items that do not add up to the total. Only checks in your code find these.</li>
+</ul>
+<p>Open <code>out/d-conflict.json</code> from yesterday:</p>
+<table>
+<thead><tr><th>Field</th><th>Value</th><th>Schema check</th><th>Makes sense?</th></tr></thead>
+<tbody>
+<tr><td><code>stated_total</code></td><td>1730</td><td>✅ a number</td><td rowspan="2">❌ The items add up to 1630</td></tr>
+<tr><td><code>calculated_total</code></td><td>1630</td><td>✅ a number</td></tr>
+</tbody>
+</table>
+<p>That answers yesterday's open question. The schema saw two valid numbers. The <code>conflict_detected</code> flag only exists because we asked Claude to compare them. In the next step, your code checks this itself instead of trusting Claude's flag.</p>
+
+<hr />
+<p><a id="p3-10"></a></p>
+<h1>P3.10 · Check, retry once, route</h1>
+<h3>25 min · <span class="tag">4.4</span> <span class="tag">5.5</span></h3>
+<hr />
+<p><strong>The one idea:</strong> when a check fails, ask again, but tell Claude <em>exactly</em> what failed. And know when asking again is useless: if the answer is not in the document, no retry can find it.</p>
+<p>The script does four things for each invoice:</p>
+<ol>
+<li><strong>Extract</strong> with yesterday's <code>extract()</code>.</li>
+<li><strong>Check</strong> with <code>validate()</code>. Each error is marked "retry can fix: True" or "False".</li>
+<li><strong>Retry once</strong>, only for fixable errors. It sends back the document, the failed extraction <em>and</em> the specific error messages.</li>
+<li><strong>Route</strong>: no errors left means AUTO-APPROVE. Anything left means HUMAN REVIEW, with the reasons.</li>
+</ol>
+<p>To be sure you see one retry succeed, the script plants a <strong>format slip</strong> in <code>a-tidy</code>: it changes the invoice date to <code>14.09.2026</code> before the check. The retry must fix it.</p>
+
+<h2>P3.10.1 · Create the script</h2>
+<p>Start <code>claude</code> in <code>p3-extraction</code> and paste:</p>
+<pre><code>Create retry.py with exactly this content, and nothing else. Do not run it.
+
+"""P3 session 2: check each extraction, retry once with the specific errors, then route."""
+import json
+import pathlib
+import random
+import re
+
+from extract import INVOICE_TOOL, MODEL, SYSTEM, client, extract
+
+DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def validate(d: dict) -&gt; list[dict]:
+    """Checks the schema cannot do. Each error says whether a retry can fix it."""
+    errors = []
+    items_sum = round(sum(item["amount"] for item in d.get("line_items", [])), 2)
+    if abs(items_sum - d.get("calculated_total", 0)) &gt; 0.01:
+        errors.append({"field": "calculated_total", "retry": True,
+                       "problem": f"calculated_total is {d.get('calculated_total')}, but the line item amounts add up to {items_sum}."})
+    for field in ("invoice_date", "due_date"):
+        value = d.get(field)
+        if value is not None and not DATE.match(str(value)):
+            errors.append({"field": field, "retry": True,
+                           "problem": f"{field} is '{value}', which is not in YYYY-MM-DD format."})
+    if d.get("stated_total") is not None and abs(d["stated_total"] - items_sum) &gt; 0.01:
+        errors.append({"field": "stated_total", "retry": True,
+                       "problem": f"The stated total is {d['stated_total']}, but the line items add up to {items_sum}. "
+                                  "Check that each amount is the line total, not the unit price."})
+    if d.get("due_date") is None:
+        errors.append({"field": "due_date", "retry": False,
+                       "problem": "No due date in the document. Payment cannot be scheduled."})
+    if d.get("currency") == "unknown":
+        errors.append({"field": "currency", "retry": False,
+                       "problem": "No currency in the document."})
+    return errors
+
+
+def retry_with_errors(text: str, failed: dict, errors: list[dict]) -&gt; dict:
+    """Send the document, the failed extraction and the specific errors back to Claude."""
+    feedback = "\n".join(f"- {e['problem']}" for e in errors)
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=1024,
+        system=SYSTEM,
+        tools=[INVOICE_TOOL],
+        messages=[{"role": "user", "content":
+            f"&lt;document&gt;\n{text}\n&lt;/document&gt;\n\n"
+            f"Your earlier extraction was:\n&lt;extraction&gt;\n{json.dumps(failed, indent=2)}\n&lt;/extraction&gt;\n\n"
+            f"It failed these checks:\n{feedback}\n\n"
+            "Read the document again and call record_invoice with a corrected extraction. "
+            "Fix only what the document supports. If the document itself is inconsistent, "
+            "keep its values exactly as written and set conflict_detected to true."}],
+    )
+    for block in response.content:
+        if block.type == "tool_use":
+            return block.input
+    raise RuntimeError(f"No tool call on retry. stop_reason={response.stop_reason}")
+
+
+def process(path: pathlib.Path, simulate_slip: bool = False) -&gt; dict:
+    text = path.read_text()
+    data = extract(text)
+    if simulate_slip:
+        data["invoice_date"] = "14.09.2026"  # a format slip, planted on purpose
+    print(f"\n=== {path.stem} ===")
+    errors = validate(data)
+    for e in errors:
+        print(f"  check 1: {e['field']}: {e['problem']}  [retry can fix: {e['retry']}]")
+    fixable = [e for e in errors if e["retry"]]
+    retried = False
+    if fixable:
+        data = retry_with_errors(text, data, fixable)
+        retried = True
+        errors = validate(data)
+        for e in errors:
+            print(f"  check 2 (after 1 retry): {e['field']}: {e['problem']}")
+    decision = "AUTO-APPROVE" if not errors else "HUMAN REVIEW"
+    print(f"  -&gt; {decision}" + (" (fixed by retry)" if retried and not errors else ""))
+    return {"document": path.stem, "decision": decision, "retried": retried,
+            "reasons": [e["problem"] for e in errors], "extraction": data}
+
+
+if __name__ == "__main__":
+    results = []
+    for p in sorted(pathlib.Path("docs").glob("*.txt")):
+        results.append(process(p, simulate_slip=(p.stem == "a-tidy")))
+    approved = [r for r in results if r["decision"] == "AUTO-APPROVE"]
+    if approved:
+        spot = random.choice(approved)
+        spot["decision"] = "AUTO-APPROVE + SPOT CHECK"
+        print(f"\nSpot check (random sample of auto-approved): {spot['document']}")
+    out = pathlib.Path("out")
+    out.mkdir(exist_ok=True)
+    (out / "review_queue.json").write_text(json.dumps(results, indent=2))
+    print("\nSummary:")
+    for r in results:
+        print(f"  {r['document']:14} {r['decision']}")</code></pre>
+<p>Type <code>/exit</code>. Read <code>validate()</code> in Antigravity: each check has <code>"retry": True</code> or <code>"retry": False</code>. That one word is the lesson.</p>
+
+<h2>P3.10.2 · Run it</h2>
+<pre><code>uv run python retry.py</code></pre>
+<p>It takes about a minute. <strong>Checkpoint ✅</strong> Compare your output with this table:</p>
+<table>
+<thead><tr><th>Invoice</th><th>Check 1 finds</th><th>Retry?</th><th>Result</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>a-tidy</td><td>Date <code>14.09.2026</code> in the wrong format</td><td>Yes</td><td>AUTO-APPROVE (fixed by retry)</td><td>A <strong>format</strong> error. The right answer is in the document.</td></tr>
+<tr><td>b-email</td><td>Probably nothing</td><td>—</td><td>AUTO-APPROVE</td><td>If check 1 found the items not adding up, the retry likely fixed it (unit price taken as line total).</td></tr>
+<tr><td>c-missing</td><td>No due date, no currency</td><td><strong>No</strong></td><td>HUMAN REVIEW</td><td>The information is <strong>not in the document</strong>. A retry would only invent it.</td></tr>
+<tr><td>d-conflict</td><td>Stated 1730, items add up to 1630</td><td>Yes, once</td><td>HUMAN REVIEW</td><td>Still wrong after the retry, because <strong>the document itself</strong> is inconsistent.</td></tr>
+<tr><td>e-ambiguous</td><td>Maybe "no due date"</td><td>No</td><td>Either</td><td>Depends on whether Claude wrote <code>null</code> or worked out the date from "within 14 days".</td></tr>
+</tbody>
+</table>
+<p>Write down for each invoice: decision, and whether a retry happened. Model results vary a little between runs. The <em>pattern</em> is what matters.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> A retry works when the answer is in the document but came out in the wrong form. <i>Example: a date in the wrong format, a unit price taken as a line total.</i></p>
+<p><b>2.</b> A retry cannot work when the information is not in the document. <i>Example: no due date on the receipt.</i> Send it to a person instead of retrying.</p>
+<p><b>3.</b> A useful retry sends three things back: the document, the failed extraction, and the exact error. "Try again" alone gives Claude nothing new.</p>
+<p><b>4.</b> Limit the retries. If it still fails after one, the problem is usually the document, not Claude.</p>
+<p><em>Trap answer to spot:</em> "retry up to 5 times until it passes". When the information is missing, more retries only increase the chance of an invented answer that passes.</p>
+</blockquote>
+
+<hr />
+<p><a id="p3-11"></a></p>
+<h1>P3.11 · Send all invoices as one batch</h1>
+<h3>10 min · <span class="tag">4.5</span></h3>
+<hr />
+<p><strong>The one idea:</strong> when nobody is waiting, send all requests in one batch. It costs about half as much, but you get no promise about <em>when</em> the results come back: often minutes, at most 24 hours.</p>
+<p>Two terms:</p>
+<ul>
+<li><strong>Message Batch</strong>: one upload that holds many separate requests. Claude processes them in the background.</li>
+<li><strong><code>custom_id</code></strong>: your own label for each request. Results may come back in any order, so the label is how you match each result to its invoice.</li>
+</ul>
+<p>The batch holds your 5 invoices, plus one request that is <strong>broken on purpose</strong> (<code>z-broken</code>, empty message), so you see how a failure looks.</p>
+
+<h2>P3.11.1 · Create and submit</h2>
+<p>Start <code>claude</code> and paste:</p>
+<pre><code>Create batch.py with exactly this content, and nothing else. Do not run it.
+
+"""P3 session 2: send all invoices as one Message Batch, then collect results by custom_id."""
+import json
+import pathlib
+import sys
+
+from extract import INVOICE_TOOL, MODEL, SYSTEM, client
+
+ID_FILE = pathlib.Path("out/batch_id.txt")
+
+
+def submit() -&gt; None:
+    requests = []
+    for p in sorted(pathlib.Path("docs").glob("*.txt")):
+        requests.append({
+            "custom_id": p.stem,
+            "params": {
+                "model": MODEL,
+                "max_tokens": 1024,
+                "system": SYSTEM,
+                "tools": [INVOICE_TOOL],
+                "messages": [{"role": "user", "content": f"&lt;document&gt;\n{p.read_text()}\n&lt;/document&gt;"}],
+            },
+        })
+    # One request that is broken on purpose, so you can see a failure by custom_id.
+    requests.append({
+        "custom_id": "z-broken",
+        "params": {"model": MODEL, "max_tokens": 1024,
+                   "messages": [{"role": "user", "content": ""}]},
+    })
+    batch = client.messages.batches.create(requests=requests)
+    ID_FILE.parent.mkdir(exist_ok=True)
+    ID_FILE.write_text(batch.id)
+    print(f"Submitted {len(requests)} requests. Batch id: {batch.id}")
+    print("Status:", batch.processing_status)
+
+
+def status() -&gt; None:
+    batch = client.messages.batches.retrieve(ID_FILE.read_text().strip())
+    print("Status:", batch.processing_status)
+    print("Counts:", batch.request_counts)
+    if batch.processing_status != "ended":
+        print("Not finished yet. Run this again in a few minutes.")
+        return
+    failed = []
+    for entry in client.messages.batches.results(batch.id):
+        kind = entry.result.type
+        if kind == "succeeded":
+            data = next((b.input for b in entry.result.message.content if b.type == "tool_use"), None)
+            vendor = data.get("vendor") if data else "(no tool call)"
+            print(f"  {entry.custom_id:14} succeeded  vendor={vendor!r}")
+        else:
+            failed.append(entry.custom_id)
+            print(f"  {entry.custom_id:14} {kind}")
+    print("\nResubmit only these custom_ids:", failed or "none")
+
+
+if __name__ == "__main__":
+    {"submit": submit, "status": status}[sys.argv[1] if len(sys.argv) &gt; 1 else "status"]()</code></pre>
+<p>Type <code>/exit</code>, then submit:</p>
+<pre><code>uv run python batch.py submit</code></pre>
+<p><strong>Checkpoint ✅</strong> "Submitted 6 requests. Batch id: msgbatch_…" and Status <code>in_progress</code>. The id is saved in <code>out/batch_id.txt</code>.</p>
+<p>Do not wait for it. Continue with P3.12, and come back in P3.13.</p>
+
+<hr />
+<p><a id="p3-12"></a></p>
+<h1>P3.12 · Who decides: the human review queue</h1>
+<h3>10 min · <span class="tag">5.5</span></h3>
+<hr />
+<p><strong>The one idea:</strong> automation decides the easy cases. People decide the cases the checks cannot settle. The routing rule must be based on things your code can <em>verify</em>, not on how sure Claude says it is.</p>
+<p>Open <code>out/review_queue.json</code>. Each invoice has a <code>decision</code> and its <code>reasons</code>. One auto-approved invoice is marked <strong>SPOT CHECK</strong>: the script picked it at random.</p>
+<table>
+<thead><tr><th>Routing signal in this script</th><th>Why it is trustworthy</th></tr></thead>
+<tbody>
+<tr><td>A check failed after the retry</td><td>Your code proved a problem</td></tr>
+<tr><td>Information missing from the document</td><td>Your code saw a <code>null</code> where a value is required</td></tr>
+<tr><td>Random spot check of approved invoices</td><td>Measures how often "approved" is actually wrong</td></tr>
+</tbody>
+</table>
+<p>One signal is deliberately <strong>not</strong> used: asking Claude "how confident are you, 1 to 10?" Claude can be confidently wrong, as yesterday's few-shot test showed: <code>services</code> three times out of three, and wrong.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Route to people on signals you can check: failed validations, missing required fields, source conflicts.</p>
+<p><b>2.</b> A confidence score from the model is only usable after you have measured it against cases a person checked. Until then, treat it as unproven.</p>
+<p><b>3.</b> Also check a random sample of the <em>auto-approved</em> items. Otherwise you never learn how often the automation is wrong.</p>
+<p><b>4.</b> Measure accuracy per document type and per field, not as one overall number. A 97% average can hide one invoice layout that fails half the time.</p>
+<p><em>Trap answer to spot:</em> "send items to review only when the model's confidence is below 7". Uncalibrated confidence is not evidence.</p>
+</blockquote>
+
+<hr />
+<p><a id="p3-13"></a></p>
+<h1>P3.13 · Collect the batch by custom_id</h1>
+<h3>10 min · <span class="tag">4.5</span></h3>
+<hr />
+<pre><code>uv run python batch.py status</code></pre>
+<p>If it says "Not finished yet", wait 2–3 minutes and run it again.</p>
+<p><strong>Checkpoint ✅</strong> When the status is <code>ended</code>:</p>
+<ul>
+<li>Five invoices show <code>succeeded</code>, each with its vendor, matched by <code>custom_id</code>.</li>
+<li><code>z-broken</code> shows <code>errored</code>.</li>
+<li>The last line says to resubmit only <code>z-broken</code>, not the whole batch.</li>
+</ul>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> Batch fits work where nobody waits: overnight reports, weekly audits. It does not fit anything a person or a merge is waiting for.</p>
+<p><b>2.</b> Plan with the worst case, not the usual case. <i>Example: results are needed at 08:00 Monday and a batch can take up to 24 hours, so submit by 08:00 Sunday, not at midnight.</i></p>
+<p><b>3.</b> Match results by <code>custom_id</code>, never by order. Resubmit only the failed IDs, changed if needed (for example, split a document that was too long).</p>
+<p><b>4.</b> One batch request is one turn. It cannot call a tool, get the tool's result, and continue. Work that needs several tool steps cannot run inside a single batch request.</p>
+<p><em>Trap answer to spot:</em> "switch to batch, and fall back to real-time if it is slow". That adds complexity to a job that should never have been batch.</p>
+</blockquote>
+
+<hr />
+<p><a id="p3-14"></a></p>
+<h1>P3.14 · Commit, say it back</h1>
+<h3>10 min</h3>
+<hr />
+<ol>
+<li>Type <code>/exit</code> in every Claude Code session and quit Antigravity.</li>
+<li>In GitHub Desktop, check: <code>retry.py</code>, <code>batch.py</code>, <code>out/review_queue.json</code>, <code>out/batch_id.txt</code>. No file holds your key.</li>
+<li>Commit <code>P3 session 2: validation, retry with feedback, batch, review routing</code>, then <strong>Push origin</strong>.</li>
+</ol>
+
+<h2>P3.14.1 · Say it back — no notes, not scored</h2>
+<p>One sentence each, in the coaching chat. Start each answer with <strong>"because"</strong>. That forces the mechanism.</p>
+<ol>
+<li>The retry fixed <code>a-tidy</code> but not <code>c-missing</code>. Because…</li>
+<li><code>d-conflict</code> still failed after its retry. Because…</li>
+<li>The batch results were matched by <code>custom_id</code>, not by order. Because…</li>
+</ol>
+
+<h2>P3.15 · Quick reference card</h2>
+<p><strong>Schema vs semantic:</strong> the schema checks each value's type; your code checks that values make sense together.<br />
+<strong>Retry works:</strong> the answer is in the document, but came out in the wrong form.<br />
+<strong>Retry cannot work:</strong> the information is not in the document. Route to a person.<br />
+<strong>A good retry sends:</strong> the document + the failed extraction + the exact error. One retry, then stop.<br />
+<strong>Route to people on:</strong> failed checks, missing fields, conflicts. Not on uncalibrated confidence.<br />
+<strong>Spot-check:</strong> a random sample of auto-approved items. Accuracy per document type and field.<br />
+<strong>Batch:</strong> about half the cost, up to 24 hours, no time promise. Only when nobody waits.<br />
+<strong>custom_id:</strong> match results by ID, resubmit only the failed IDs. One batch request = one turn, no tool loop.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat. Never paste your API key.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>ImportError: cannot import name ... from extract</code></td><td>Your <code>extract.py</code> is missing <code>client</code>, <code>MODEL</code>, <code>SYSTEM</code> or <code>INVOICE_TOOL</code>. Check that those four names still exist at the top of the file.</td></tr>
+<tr><td><code>No tool call</code></td><td>Without a forced <code>tool_choice</code>, Claude answered in text. Run again. If it repeats, add to <code>SYSTEM</code>: "Always answer by calling record_invoice."</td></tr>
+<tr><td><code>KeyError: 'amount'</code></td><td>Claude left a field out of a line item. Run again; if it repeats, paste the output here.</td></tr>
+<tr><td><code>batch.py submit</code> refused because of <code>z-broken</code></td><td>Your SDK checks requests before sending. Delete the <code>z-broken</code> block from <code>batch.py</code> and submit again. You lose only the failure demo.</td></tr>
+<tr><td>Batch status stays <code>in_progress</code> for over 30 minutes</td><td>Normal: there is no time promise. Continue with P3.14, then check again later or tomorrow.</td></tr>
+<tr><td><code>FileNotFoundError: out/batch_id.txt</code></td><td>Run <code>uv run python batch.py submit</code> first.</td></tr>
+<tr><td><code>AuthenticationError</code></td><td>Open a new Terminal tab so it loads <code>~/.zshrc</code>, then try again.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>

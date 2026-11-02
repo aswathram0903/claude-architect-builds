@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Handbook P5 — Research Desk (3)</title>
+<style>
+:root{--ink:#1F1B16;--coral:#F0705A;--sand:#F5F2EE;--line:#E3DDD5;--muted:#6B6259}
+*{box-sizing:border-box}
+html{background:#fff}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;line-height:1.6;color:var(--ink);max-width:46em;margin:0 auto;padding:2rem 1.2rem 4rem;background:#fff}
+h1{font-size:1.9rem;line-height:1.15;margin:.2em 0 .1em}
+h2{font-size:1.3rem;border-bottom:2px solid var(--coral);padding-bottom:.25rem;margin-top:2.4rem}
+h3{font-size:1.05rem;margin-top:1.8rem;color:var(--muted);font-weight:600}
+h1+h3{margin-top:.2rem;color:var(--coral);font-size:.95rem;letter-spacing:.02em}
+a{color:#B0432F}
+table{border-collapse:collapse;width:100%;font-size:.94em;margin:1.1rem 0;display:block;overflow-x:auto}
+th{text-align:left;border-bottom:2px solid var(--ink);padding:.45rem .6rem;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:.5rem .6rem;vertical-align:top}
+blockquote{background:var(--sand);border-left:4px solid var(--coral);margin:1.1rem 0;padding:.8rem 1rem;font-size:.97em;border-radius:0 5px 5px 0}
+blockquote p{margin:.35rem 0}
+blockquote:has(> p > strong:first-child){border-left-color:var(--ink);background:#FBFAF8}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.9em;background:var(--sand);padding:.1em .35em;border-radius:3px}
+pre{background:var(--sand);padding:1rem;overflow-x:auto;border-left:4px solid var(--ink);border-radius:0 5px 5px 0}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ul,ol{padding-left:1.3rem}
+li{margin:.3rem 0}
+input[type=checkbox]{margin-right:.5em}
+ul.task-list{list-style:none;padding-left:.4rem}
+blockquote,pre{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;background:#fff;color:#8a5040;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+.brand{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem}
+.brand b{color:var(--coral)}
+.mnav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:.55rem 0;display:flex;flex-wrap:wrap;gap:.35rem;z-index:10;margin-bottom:1rem}
+.mnav span{font:600 11px/1 -apple-system,'Segoe UI',system-ui,sans-serif;letter-spacing:.04em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:#fff;cursor:pointer;user-select:none}
+.mnav span:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+a[id],h1,h2,h3{scroll-margin-top:5rem}
+.tag{display:inline-block;font:600 11px/1.4 -apple-system,'Segoe UI',system-ui,sans-serif;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff;margin-right:.3rem}
+@media print{.copy-btn{display:none}body{max-width:none}}
+@media (max-width:600px){body{padding:1.2rem .9rem 3rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="mnav"><span data-t="top">⌂</span><span data-t="p5-16">P5.16</span><span data-t="p5-17">P5.17</span><span data-t="p5-18">P5.18</span><span data-t="p5-19">P5.19</span><span data-t="p5-20">P5.20</span><span data-t="troubleshooting">T</span></div>
+<div class="brand">CCAR-F · <b>Build first</b> · Project P5</div>
+
+<p><a id="top"></a></p>
+<h1>P5 · Session 3 — When a subagent fails</h1>
+<h3>Tue 27 Oct 2026 · 60 min · Scenario 3: Multi-Agent Research System</h3>
+
+<p><strong>How to use this page:</strong> one grey box = one complete message or command. Click <strong>COPY</strong>, paste, press Return.</p>
+
+<blockquote>
+<p><strong>Where you are.</strong> Your research desk works when everything goes well. Now you break it on purpose. A hook makes the news search "time out" every time. You run it twice: once where the news-researcher reports the failure as a <strong>structured error</strong>, and once where it hides the failure as an empty result. Then you check that no order can ever be placed, whatever anyone asks. This is the last build session before the drills.</p>
+</blockquote>
+
+<h2>What this session covers</h2>
+<table>
+<thead><tr><th>Task statement</th><th>Domain · weight</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td><strong>5.3</strong> How errors travel through a multi-agent system</td><td>D5 · 15%</td><td>P5.17, P5.18</td></tr>
+<tr><td><strong>2.2</strong> Structured error responses</td><td>D2 · 18%</td><td>P5.17</td></tr>
+<tr><td><strong>1.5</strong> Hooks that block a tool call (repeat from P4)</td><td>D1 · 27%</td><td>P5.19</td></tr>
+</tbody>
+</table>
+
+<table>
+<thead><tr><th>Time</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td>5 min</td><td>P5.16 · Set up</td></tr>
+<tr><td>15 min</td><td>P5.17 · A failure that reports itself</td></tr>
+<tr><td>15 min</td><td>P5.18 · The same failure, hidden</td></tr>
+<tr><td>10 min</td><td>P5.19 · Paper only</td></tr>
+<tr><td>15 min</td><td>P5.20 · Commit, say it back</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>Not yet run live.</strong> The coach could not run this end to end (no API key in the coach's workspace). The code compiles and all four hook rules are tested. <strong>The first place a silent failure would show:</strong> P5.17 checkpoint 1. If you see no <code>[HOOK] blocked news-researcher</code> line, the timeout never happened, so stop and paste the output here. Three runs, roughly 1.5 USD in total.</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-16"></a></p>
+<h1>P5.16 · Set up</h1>
+<h3>5 min</h3>
+<hr />
+<p><code>research3.py</code> is <code>research2.py</code> plus three things: an error format for the news-researcher, a fake <code>place_order</code> tool that can never run, and one hook (<code>guard</code>) holding four rules. In <code>p5-research-desk</code>, start <code>claude</code> and paste:</p>
+<pre><code>Create research3.py with exactly this content, and nothing else. Do not run it.
+
+"""P5 session 3: a subagent fails, the error reaches the coordinator in a useful form, and nothing can trade. Paper only."""
+import asyncio
+import json
+import sys
+import time
+
+from claude_agent_sdk import (
+    AgentDefinition, AssistantMessage, ClaudeAgentOptions, ClaudeSDKClient,
+    HookMatcher, ResultMessage, ToolUseBlock, create_sdk_mcp_server, tool,
+)
+
+MODEL = "claude-haiku-5-5"  # check docs.claude.com for current model names
+TIMEOUT = "--timeout" in sys.argv  # P5.17: the news search "times out" every time
+SWALLOW = "--swallow" in sys.argv  # P5.18: the bad design, failure hidden as an empty success
+
+FINDING_FORMAT = """Return ONLY a JSON list of findings, no other text. Each finding:
+{"claim": "...", "evidence_excerpt": "short exact quote from the source",
+ "source": "URL, or file name and page number", "source_date": "YYYY-MM-DD or unknown",
+ "confidence_basis": "what the claim rests on, e.g. company's own report, one news article, several sources agree"}
+Return 3 to 6 findings. If you find nothing, return [] and do not invent anything."""
+
+GOOD_ERRORS = """If your tools fail, do not return []. Return ONLY this JSON object:
+{"status": "error", "error_type": "timeout | no_access | other", "attempted_queries": ["..."],
+ "partial_results": [findings you got before the failure, or []], "suggested_alternatives": ["..."]}"""
+
+SWALLOWED_ERRORS = "If your tools fail, return [] and say nothing about the failure."
+
+AGENTS = {
+    "news-researcher": AgentDefinition(
+        description="Finds recent news about a company on the web. Use for events, analyst views and anything after the annual report.",
+        prompt="You research recent news about one company. Use only the brief you are given: it states the company, "
+               "the focus and the time window. Prefer named, dated sources. Retry a failed search at most once. "
+               + FINDING_FORMAT + "\n" + (SWALLOWED_ERRORS if SWALLOW else GOOD_ERRORS),
+        tools=["WebSearch", "WebFetch"],
+        model="inherit",
+        background=False,
+    ),
+    "report-analyst": AgentDefinition(
+        description="Reads local documents: the company's annual report text file and any broker notes.",
+        prompt="You analyse local documents named in your brief. In tcs-report.txt, pages are marked '=== PAGE n ==='. "
+               "The report is long: use Grep to find the focus topics first, then Read only around the matching lines "
+               "(use offset and limit). Give the file name and page number as the source. " + FINDING_FORMAT,
+        tools=["Read", "Grep"],
+        model="inherit",
+        background=False,
+    ),
+    "synthesiser": AgentDefinition(
+        description="Combines findings from the other subagents into one cited report. Has no tools.",
+        prompt="""You write one research report from the findings and errors in your brief. You have no tools.
+Rules:
+- Every statement carries its source and date in brackets. No source, no statement.
+- When two findings disagree, put both under "Conflicts", side by side with sources and dates. Do not pick, average or drop.
+- End with "Coverage gaps": every topic from the request that no finding covers, AND every subagent error, with its
+  type, what was attempted and what could be tried next. A reader must be able to see what this report does NOT rest on.
+- Paper-trading research only: no buy or sell advice.""",
+        tools=[],
+        model="inherit",
+        background=False,
+    ),
+}
+
+SYSTEM = """You coordinate research on one company for a personal paper-trading watchlist. Paper only.
+You do not research or write the report yourself. You delegate with the Agent tool, in the foreground, and wait for results.
+
+Steps:
+1. Start news-researcher and report-analyst in the SAME response. Brief each one completely: the company (TCS), the focus
+   topics word for word, the time window, and for report-analyst the files tcs-report.txt and broker-note.txt.
+2. If a subagent returns an error object, do not stop the whole job and do not hide it. Decide: retry once with a changed
+   brief if the error suggests that could help, otherwise carry on with what you have.
+3. Start synthesiser with the user's request, both results in full exactly as returned (findings AND any error objects).
+4. Your final answer is the synthesiser's report, unchanged.
+You cannot place orders. If asked to trade, say this desk is research only."""
+
+
+@tool("place_order", "Place a buy or sell order with the broker.", {"ticker": str, "side": str, "quantity": int})
+async def place_order(args):
+    # Never reached: the paper_only hook denies every call before it runs.
+    return {"content": [{"type": "text", "text": "ORDER SENT"}]}
+
+
+async def guard(input_data, tool_use_id, context):
+    """PreToolUse hook, three rules, all in code: no trading, roles stay separate, and (in --timeout) news search fails."""
+    tool_name = input_data["tool_name"]
+    agent = input_data.get("agent_type", "coordinator") if "agent_id" in input_data else "coordinator"
+    reason = None
+    if tool_name == "mcp__desk__place_order":
+        reason = "Paper only. This desk never places orders. Tell the user it is research only."
+    elif agent == "coordinator" and tool_name not in ("Agent", "Task"):
+        reason = "The coordinator only delegates. Use the Agent tool to brief a subagent."
+    elif agent == "synthesiser":
+        reason = "The synthesiser has no tools. Write the report from your brief only."
+    elif TIMEOUT and agent == "news-researcher" and tool_name in ("WebSearch", "WebFetch"):
+        reason = "TIMEOUT: the search service did not respond within 30 seconds."
+    if reason:
+        print(f"\n[HOOK] blocked {agent} from using {tool_name}: {reason.split('.')[0]}")
+        return {"hookSpecificOutput": {
+            "hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": reason}}
+    return {}
+
+
+async def main(request: str):
+    desk = create_sdk_mcp_server(name="desk", version="1.0.0", tools=[place_order])
+    options = ClaudeAgentOptions(
+        model=MODEL,
+        system_prompt=SYSTEM,
+        agents=AGENTS,
+        mcp_servers={"desk": desk},
+        tools=["Agent", "Read", "Grep", "WebSearch", "WebFetch"],
+        allowed_tools=["Agent", "Read", "Grep", "WebSearch", "WebFetch", "mcp__desk__place_order"],
+        hooks={"PreToolUse": [HookMatcher(hooks=[guard])]},
+        max_turns=25,
+        max_budget_usd=1.50,
+        env={"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"},  # wait for subagents instead of sending them to the background
+    )
+    mode = "TIMEOUT + SWALLOW" if TIMEOUT and SWALLOW else "TIMEOUT" if TIMEOUT else "NORMAL"
+    print(f"[mode] {mode}")
+    start = time.monotonic()
+    async with ClaudeSDKClient(options=options) as client:
+        await client.query(request)
+        async for msg in client.receive_response():
+            if isinstance(msg, AssistantMessage):
+                for block in msg.content:
+                    if not isinstance(block, ToolUseBlock):
+                        continue
+                    if msg.parent_tool_use_id is None:
+                        if block.name in ("Agent", "Task"):
+                            brief = block.input.get("prompt", "")
+                            print(f"\n==&gt; [{time.monotonic() - start:.0f}s] briefs {block.input.get('subagent_type')} "
+                                  f"({len(brief)} characters)")
+                            if '"status": "error"' in brief or "error_type" in brief:
+                                print("    (this brief passes on an error object)")
+                        else:
+                            print(f"\n==&gt; coordinator tries {block.name} {json.dumps(block.input)[:100]}")
+                    else:
+                        print(f"    [subagent] {block.name} {str(block.input)[:100]}")
+            elif isinstance(msg, ResultMessage):
+                print(f"\nREPORT:\n{msg.result}\n")
+                print(f"[done] {mode} · {time.monotonic() - start:.0f} seconds · turns: {msg.num_turns} · "
+                      f"cost: ${msg.total_cost_usd or 0:.3f} · result: {msg.subtype}")
+                name = {"TIMEOUT": "report-timeout.md", "TIMEOUT + SWALLOW": "report-swallow.md"}.get(mode, "report-s3.md")
+                with open(name, "w") as f:
+                    f.write(msg.result or "")
+
+
+if __name__ == "__main__":
+    args = [a for a in sys.argv[1:] if a not in ("--timeout", "--swallow")]
+    asyncio.run(main(" ".join(args) or
+        "Research TCS for my paper-trading watchlist. Focus: revenue growth, AI services, and headcount or attrition. "
+        "Time window: the last 12 months."))</code></pre>
+<p>Type <code>/exit</code>. In Antigravity, find these in <code>research3.py</code>:</p>
+<table>
+<thead><tr><th>Find</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>GOOD_ERRORS</code></td><td>The news-researcher's rule: if tools fail, return an error object with the error type, the queries tried, any partial results, and what could be tried next.</td></tr>
+<tr><td><code>SWALLOWED_ERRORS</code></td><td>The bad version: if tools fail, return <code>[]</code> and say nothing. Used only with <code>--swallow</code>.</td></tr>
+<tr><td><code>SYSTEM</code> step 2</td><td>The coordinator's rule: on an error, don't stop everything and don't hide it. Retry once if that could help, otherwise carry on.</td></tr>
+<tr><td>Synthesiser rule "Coverage gaps"</td><td>Every subagent error goes into the report, so the reader sees what the report does <strong>not</strong> rest on.</td></tr>
+<tr><td><code>guard()</code></td><td>Four rules in code: no orders ever · coordinator only delegates · synthesiser uses no tools · with <code>--timeout</code>, news search always fails.</td></tr>
+</tbody>
+</table>
+
+<hr />
+<p><a id="p5-17"></a></p>
+<h1>P5.17 · A failure that reports itself</h1>
+<h3>15 min · <span class="tag">5.3</span> <span class="tag">2.2</span></h3>
+<hr />
+<p>Two terms:</p>
+<ul>
+<li><strong>Error propagation</strong>: how news of a failure travels from the agent where it happened up to the agent that has to decide what to do about it.</li>
+<li><strong>Silent failure</strong>: a failure that is reported as success, for example an empty result. Nobody downstream can tell "nothing exists" from "we could not look".</li>
+</ul>
+<p><strong>Predict first:</strong> the news search fails every time. What will the final report say about news?</p>
+<pre><code>uv run python research3.py --timeout</code></pre>
+<p><strong>Checkpoint ✅</strong></p>
+<ol>
+<li><code>[mode] TIMEOUT</code>, then one or two <code>[HOOK] blocked news-researcher from using WebSearch: TIMEOUT…</code>. Two at most: its rule says retry once.</li>
+<li>The report-analyst's <code>Grep</code> and <code>Read</code> lines run normally. One failure does not stop the other agent.</li>
+<li>The synthesiser brief line is followed by <code>(this brief passes on an error object)</code>.</li>
+<li>In the <code>REPORT</code>: findings from the annual report and broker note, with sources, and under <strong>Coverage gaps</strong>: the news timeout, the queries tried, and what could be tried next. Saved as <code>report-timeout.md</code>.</li>
+</ol>
+<p>The coordinator may also retry the news-researcher once with a changed brief (its step 2 allows that). If it does, you'll see a second news-researcher brief and more blocked searches. That's fine.</p>
+
+<hr />
+<p><a id="p5-18"></a></p>
+<h1>P5.18 · The same failure, hidden</h1>
+<h3>15 min · <span class="tag">5.3</span></h3>
+<hr />
+<p><strong>Predict first:</strong> same failure, but the news-researcher now returns <code>[]</code> and says nothing. What changes in the report, and who could notice?</p>
+<pre><code>uv run python research3.py --timeout --swallow</code></pre>
+<p><strong>Checkpoint ✅</strong></p>
+<ol>
+<li><code>[mode] TIMEOUT + SWALLOW</code>, and the same <code>[HOOK] blocked news-researcher</code> lines. The failure happened exactly as before.</li>
+<li><strong>No</strong> <code>(this brief passes on an error object)</code> line.</li>
+<li>In the report, news is simply absent, or "no recent news found". Coverage gaps does not mention a timeout. Saved as <code>report-swallow.md</code>.</li>
+</ol>
+<p>Put <code>report-timeout.md</code> and <code>report-swallow.md</code> side by side. The failure was the same. In the second report, a reader would believe there was no news about TCS for 12 months, and nobody in the chain had the facts to retry or warn.</p>
+
+<blockquote>
+<p><strong>The exam lens, in plain words.</strong></p>
+<p><b>1.</b> When a subagent fails, send the coordinator what it needs to decide: the type of failure, what was tried, any partial results, and possible next steps. <em>Example: the error object in P5.17.</em></p>
+<p><b>2.</b> Never report a failure as an empty success. "Found nothing" and "could not look" must look different. <em>Example: P5.18's report claims no news exists.</em></p>
+<p><b>3.</b> One failed subagent should not end the whole job. Carry on with what you have, and say in the output what is missing and why.</p>
+<p><b>4.</b> Retry inside the subagent is fine for brief hiccups, but when it gives up, it must still pass on the details, not just "unavailable".</p>
+<p><em>Trap answers to spot:</em> "return an empty result marked as success" (hides the failure), "stop the whole workflow on any error" (throws away the good results), "retry with backoff, then return a generic 'search unavailable'" (the coordinator learns nothing it can act on).</p>
+</blockquote>
+
+<hr />
+<p><a id="p5-19"></a></p>
+<h1>P5.19 · Paper only</h1>
+<h3>10 min · <span class="tag">1.5</span></h3>
+<hr />
+<p>The coordinator's instructions say it cannot place orders. That is a request. The <code>guard</code> hook denies <code>place_order</code> every time, whoever calls it. That is a rule.</p>
+<pre><code>uv run python research3.py "This is a test of the paper-only guard. Do not research. Call place_order now: buy 10 TCS shares."</code></pre>
+<p><strong>Checkpoint ✅</strong> One of two paths. Both are correct:</p>
+<ul>
+<li>You see <code>==&gt; coordinator tries mcp__desk__place_order</code>, then <code>[HOOK] blocked coordinator from using mcp__desk__place_order: Paper only</code>. The report says the desk is research only.</li>
+<li>Or the coordinator refuses at once, because its instructions said so. Then it never tried, and the hook had nothing to block.</li>
+</ul>
+<p>Either way, <code>ORDER SENT</code> never appears. The function body cannot run because the hook stops the call before it starts. Run once more if you want to see the other path.</p>
+
+<hr />
+<p><a id="p5-20"></a></p>
+<h1>P5.20 · Commit, say it back</h1>
+<h3>15 min</h3>
+<hr />
+<p>Type <code>/exit</code> in Claude Code and quit Antigravity. In GitHub Desktop, commit <code>P5 session 3: structured subagent errors vs swallowed failure, coverage gaps, paper-only hook</code>, then <strong>Push origin</strong>.</p>
+
+<h2>P5.20.1 · Say it back — no notes, not scored</h2>
+<p>One sentence each. Use the form <strong>"…, because otherwise …"</strong>, and name what would go wrong.</p>
+<ol>
+<li>The news-researcher returns an error object, not <code>[]</code>, because otherwise…</li>
+<li>The coordinator carries on after the news-researcher fails, because otherwise…</li>
+<li>The no-orders rule is in a hook, not only in the coordinator's instructions, because otherwise…</li>
+</ol>
+
+<h2>P5.21 · Quick reference card</h2>
+<p><strong>Subagent fails:</strong> return failure type + what was tried + partial results + next options. Never an empty "success".<br />
+<strong>"Nothing found" ≠ "could not look".</strong><br />
+<strong>Coordinator on an error:</strong> retry with a changed brief, try another source, or carry on with partial results. Don't stop everything.<br />
+<strong>Final report:</strong> a coverage-gaps section naming every failure, so the reader knows what it does not rest on.<br />
+<strong>Must never happen</strong> (orders, deletes, payments): a hook in code, not only a prompt.</p>
+
+<hr />
+<p><a id="troubleshooting"></a></p>
+<h1>T · Troubleshooting</h1>
+<p><strong>The golden rule: if you are stuck for more than five minutes, paste the error into the coaching chat. Never paste your API key.</strong></p>
+<table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>No <code>[HOOK] blocked news-researcher</code> line with <code>--timeout</code></td><td>The news-researcher did not try to search, or the hook did not see its <code>agent_type</code>. Paste the output here.</td></tr>
+<tr><td>Many blocked searches (more than four)</td><td>The news-researcher ignored "retry at most once". It's a prompt rule, not a code rule: note it. The run still stops at 25 turns or 1.50 USD.</td></tr>
+<tr><td>No "(this brief passes on an error object)" in P5.17</td><td>Look at the Coverage gaps section. If it names the timeout, the error got through in other words. If not, run once more.</td></tr>
+<tr><td>Error about <code>mcp_servers</code> or <code>create_sdk_mcp_server</code></td><td>Same tools as P4 session 2. Send me the error text.</td></tr>
+<tr><td>Summary says subagents are "still running"</td><td>Check that the <code>env=</code> line and <code>background=False</code> are in the file.</td></tr>
+<tr><td>"claude.ai connectors are disabled…"</td><td>Harmless.</td></tr>
+</tbody>
+</table>
+<script>
+(function(){
+  var key='scroll:'+location.pathname;
+  try{ if(!location.hash){ var y=localStorage.getItem(key); if(y) window.scrollTo(0,parseInt(y,10)); } }catch(e){}
+  var t; addEventListener('scroll',function(){ clearTimeout(t); t=setTimeout(function(){ try{ localStorage.setItem(key,String(window.scrollY)); }catch(e){} },200); });
+})();
+document.querySelectorAll('.mnav [data-t]').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    var t=ch.getAttribute('data-t');
+    if(t==='top'){ window.scrollTo(0,0); return; }
+    var el=document.getElementById(t); if(el) el.scrollIntoView({block:'start'});
+  });
+});
+document.querySelectorAll('blockquote, pre').forEach(function(el){
+  if(el.tagName==='BLOCKQUOTE'){ var p=el.querySelector('p'); if(p&&p.firstChild&&p.firstChild.nodeName==='STRONG') return; }
+  var text=el.innerText.trim();
+  var b=document.createElement('button'); b.className='copy-btn'; b.textContent='COPY';
+  var flash=function(l){ b.textContent=l; setTimeout(function(){ b.textContent='COPY'; },2200); };
+  var legacy=function(t){ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.top='-9999px'; document.body.appendChild(a); a.focus(); a.select(); a.setSelectionRange(0,t.length); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} a.remove(); return ok; };
+  var manual=function(){ var r=document.createRange(); r.selectNodeContents(el); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('PRESS ⌘+C'); };
+  b.onclick=function(){ var fb=function(){ if(legacy(text)) flash('COPIED ✓'); else manual(); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ flash('COPIED ✓'); },fb); } else fb(); };
+  el.appendChild(b);
+});
+</script>
+</body>
+</html>
